@@ -1,15 +1,16 @@
 @extends('app')@section('content')
+<div class = "col-sm-6"><h1 class = "page-header">Bienvenido, {{ Auth::user()->name}}</h1></div>
 
 <div class="col-xs-12 visible-xs">
-    <div class="col-xs-6"><i class="default fa fa-circle fa-fw"></i> Por llegar </div>
-    <div class="col-xs-6"><i class="azul fa fa-circle fa-fw"></i> Espera </div>
-    <div class="col-xs-6"><i class="verde fa fa-circle fa-fw"></i> Consulta </div>
-    <div class="col-xs-6"><i class="anaranjado fa fa-circle fa-fw"></i> Finalizada </div>
-    <div class="col-xs-6"><i class="rojo fa fa-circle fa-fw"></i> Falta </div>
+    <div class="col-xs-12"><i class="default fa fa-circle fa-fw"></i> Por llegar </div>
+    <div class="col-xs-12"><i class="azul fa fa-circle fa-fw"></i> Espera </div>
+    <div class="col-xs-12"><i class="verde fa fa-circle fa-fw"></i> Consulta </div>
+    <div class="col-xs-12"><i class="anaranjado fa fa-circle fa-fw"></i> Finalizada </div>
+    <div class="col-xs-12"><i class="rojo fa fa-circle fa-fw"></i> Falta </div>
 </div>
 
-<div class = "col-xs-12 col-sm-4 col-md-offset-9 col-md-3 " id="sandbox-container" style="z-index: 3;" align='center'>
-    <div class="calendario"></div>
+<div class = "col-xs-6 col-md-offset-3 col-md-3 " id="sandbox-container" style="z-index: 3;">
+    <div class="calendario ajusteCalendario"></div>
 </div>
 
 {{--seccion Invisible--}}
@@ -18,7 +19,7 @@
 
 <div class = "col-md-9 semana subirSemana" style="z-index: 2;">
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-3 col-md-offset-0">
+    <div class="form-group col-sm-3">
         {!! Form::select('tipoCita', [
             '0'=>'Filtrar tipo de Cita:',
             '1'=>'Consulta',
@@ -27,26 +28,24 @@
         ], null, ['id' => 'tipoCita','class' => 'form-control']) !!}
     </div>
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-2 col-md-offset-0" align="center">
-        <button type="button" class="btn btn-default botonManana" onclick="filtroTurno('manana')">Mañana</button>
+    <div class="form-group col-sm-2" align="center">
+        <button type="button" class="btn btn-default" onclick="filtroTurno('manana')">Mañana</button>
     </div>
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-2 col-md-offset-0" align="center">
-        <button type="button" class="btn btn-default botonTarde" onclick="filtroTurno('tarde')">Tarde</button>
+    <div class="form-group col-sm-2" align="center">
+        <button type="button" class="btn btn-default" onclick="filtroTurno('tarde')">Tarde</button>
     </div>
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-2 col-md-offset-0" align="center">
-        <button type="button" class="btn btn-default botonTodo botonActivo" onclick="filtroTurno('todo')">Todo</button>
+    <div class="form-group col-sm-2" align="center">
+        <button type="button" class="btn btn-default" onclick="filtroTurno('todo')">Todo</button>
     </div>
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-3 col-md-offset-0 activarAgenda" align="center">
-        @if(Entrust::can('crear_servicios'))
-            <button type="button" class="btn btn-default botonActiva" onclick="activarAgenda()"> Activar Agenda</button>
-        @endif
+    <div class="form-group activarAgenda col-sm-3" align="center">
+        <button type="button" class="btn btn-default" onclick="activarAgenda()"> Activar Agenda</button>
     </div>
 
-    <div class="form-group col-sm-6 col-sm-offset-1 col-md-3 col-md-offset-0 activarCalendario hidden" align="center">
-        <button type="button" class="btn btn-default botonDesactiva" onclick="activarCalendario()"> Desactivar Agenda</button>
+    <div class="form-group col-sm-3 activarCalendario hidden" align="center">
+        <button type="button" class="btn btn-default" onclick="activarCalendario()"> Desactivar Agenda</button>
     </div>
 
     <div class="col-xs-12 text-center hidden-xs" style="margin-top: 10px;">
@@ -60,17 +59,16 @@
     @include('web.estructuraSemana')
 </div>
 
-@if(Entrust::can('ver_servicios'))
-    <div class = "col-md-3 diaLateral" style="z-index: 1;margin-top: 10px;"></div>
-@endif
+<div class = "col-md-3 diaLateral" style="z-index: 1;margin-top: 10px;"></div>
+
 <script>
     $(document).on('ready',function() {
 
         var arrayFecha_inhabil = checarFechaInhabiles();
-        //var arrayServicios = buscarFechaServicios();
+        var arrayServicios = buscarFechaServicios();
 
         // deshabilitar fechas y poner servicios en el calendario derecho
-        calendario_derecho(arrayFecha_inhabil/*,arrayServicios*/);
+        calendario_derecho(arrayFecha_inhabil,arrayServicios);
 
         var hoy = new Date();
 
@@ -120,9 +118,10 @@
         $('#modalConsulta').on('hidden.bs.modal', function (e) {
             var tieneDatos = $('.guardarConsulta').hasClass('hidden');
             if(tieneDatos == true){
-                window.location.reload();
+                setTimeout("location.href = '/'",0);
             }
         })
+
     });
 
     function filtrarTipoCita(tipo){
@@ -143,12 +142,11 @@
     }
 
     function checarFechaInhabiles(){
-        //Calendario de la derecha
         var fecha_inhabil = "";
         var arrayFecha_inhabil = [];
         $.ajax({
             type   : "GET",
-            url    : "/dr_basico/inhabilesD",
+            url    : "/disponibles",
             async: false,
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
@@ -165,9 +163,11 @@
     }
 
     function checarHorarioInhabiles(){
+        var horario_inhabil = "";
+        var arrayhorario_inhabil = [];
         $.ajax({
             type   : "GET",
-            url    : "/dr_basico/inhabilesH",
+            url    : "/inhabiles",
             async: false,
             success: function (data) {
                 /*console.log(data);*/
@@ -180,11 +180,12 @@
     }
 
     function buscarFechaServicios(){
+        /*var myArray = ['2016-06-17'];*/
         var servicios = "";
         var arrayServicios = [];
         $.ajax({
             type   : "GET",
-            url    : "/dr_basico/servicios/hoy/Delante",
+            url    : "/servicios/hoy/Delante",
             async: false,
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
@@ -234,7 +235,7 @@
                 var horaLimpia = horaEstatica.replace(/\:/g, "").slice(0, -2);
                 var clase = horaLimpia+i;
 
-                $('.'+clase).attr('fecha',dia).attr('hora',horaEstatica).addClass(horaLimpia+fechaLimpia);
+                $('.'+clase).attr('fecha',dia).attr('hora',horaEstatica)/*.attr('onclick','agregarCita(this)')*/.addClass(horaLimpia+fechaLimpia);
 
                 //Borde del cuerpo seleccionado de la tabla
                 $('.'+horaLimpia+fechaSelectLimpia).addClass('seleccionDia');
@@ -291,9 +292,13 @@
             url: 'servicios/fecha/' + inicio + '/'+ fin,
             success: function (data) {
                 /*console.log(data);*/
+
                 if (data != '') {
+
                     var result = "";
+
                     for (var i = 0; i < data.length; i++) {
+
                         var tipo = data[i].tipo;
                         var tipoCita = data[i].tipo;
                         if (tipo == 1) {tipo = 'Consulta';}else{tipo = 'Cirugia';}
@@ -319,16 +324,17 @@
                         if (indiceAnterior != (horaLimpia+fechaLimpia)){
                             result = '<span id="'+id+'"' +
                                     'tipoCita="'+tipoCita+'" ' +
-                                    'class="cursor" col-xs-1>' +
+                                    'class="cursor">' +
                                     '<i class="' + estado + ' fa fa-circle fa-fw" title="' + paciente + ' ' + hora + ' "></i>' +
                                     '</span>';
                         }else {
                             result += '<span id="'+id+'"' +
                                     'tipoCita="'+tipoCita+'" ' +
-                                    'class="cursor col-xs-1">' +
+                                    'class="cursor">' +
                                     '<i class="' + estado + ' fa fa-circle fa-fw" title="' + paciente + ' ' + hora + ' "></i>' +
                                     '</span>';
                         }
+
                         $('.'+horaLimpia+fechaLimpia).html(result).css("background-color", "").attr('hora',hora).attr('onclick','vistaLateralHora(this)').attr('actividad','si');
                         indiceAnterior = horaLimpia+fechaLimpia;
                     }
@@ -339,23 +345,24 @@
                 swal("Espere", "Algo salio mal, reintente de nuevo o comuníquese con su administrador", "warning");
             }
         });
+        /*$("td.active").removeClass('active').addClass('activoColor');*/
     }
 
     function obtenerEstado(estado){
         switch(estado){
-            case '0':
+            case 0:
                 estado = 'default';
                 break;
-            case '1':
+            case 1:
                 estado = 'azul';
                 break;
-            case '2':
+            case 2:
                 estado = 'verde';
                 break;
-            case '3':
+            case 3:
                 estado = 'anaranjado';
                 break;
-            case '4':
+            case 4:
                 estado = 'rojo';
                 break;
             default:
@@ -363,14 +370,14 @@
         }
         return estado;
     }
-
     function vistaLateral(valor){
+        /*var id_servicio = $(valor).attr('id');*/
         var fechaD = $(valor).attr('fecha');
 
         $.ajax({
             async: false,
             type: 'GET',
-            url: '/dr_basico/servicios/fecha/' + fechaD,
+            url: 'servicios/fecha/' + fechaD,
             success: function (data) {
                 estructuraLateral(data,fechaD);
             }, error: function (ajaxContext) {
@@ -380,19 +387,21 @@
     }
 
     function vistaLateralHora(valor){
+        /*var id_servicio = $(valor).attr('id');*/
         var fechaD = $(valor).attr('fecha');
         var horaInicio = $(valor).attr('hora');
 
         horaInicio = ajustarHora(horaInicio);
         var horaFin = ajustarHoraArriba(horaInicio);
-        horaFin = menosUnMin(horaFin);
 
         $.ajax({
             async: false,
             type: 'GET',
-            url: '/dr_basico/servicios/fecha/'+fechaD+'/'+ horaInicio+'/'+ horaFin,
+            url: 'servicios/fecha/'+fechaD+'/'+ horaInicio+'/'+ horaFin,
             success: function (data) {
+
                 estructuraLateral(data,fechaD)
+
             }, error: function (ajaxContext) {
                 swal("Espere", "Algo salio mal, reintente de nuevo o comuníquese con su administrador", "warning");
             }
@@ -402,9 +411,20 @@
     function agregarCita (valor){
         var fechaD = $(valor).attr('fecha');
         var horaInicio = $(valor).attr('hora');
+
         horaInicio = ajustarHora(horaInicio);
         var horaFin = ajustarHoraArriba(horaInicio);
+
         window.location.href = 'servicios/cita/'+fechaD+'/'+ horaInicio+'/'+ horaFin;
+
+        /*$.ajax({
+            async: false,
+            type: 'GET',
+            url: 'servicios/cita/'+fechaD+'/'+ horaInicio+'/'+ horaFin,
+            error: function (ajaxContext) {
+                swal("Espere", "Algo salio mal, reintente de nuevo o comuníquese con su administrador", "warning");
+            }
+        });*/
     }
 
     function estructuraLateral(data,fechaD){
@@ -414,7 +434,7 @@
 
         var result = "";
         result += '<div class="row"><h3 class="row col-xs-12 text-center">'+nombreDia+' '+d+'</h3></div>';
-        console.log(data);
+
         if (data != '') {
 
             for (var i = 0; i < data.length; i++) {
@@ -457,42 +477,35 @@
         var result = '';
         var colorEstado = '';
         switch (estado){
-            case '0': colorEstado = "default";
+            case 0: var colorEstado = "default";
                 break;
-            case '1': colorEstado = "azul";
+            case 1: var colorEstado = "azul";
                 break;
-            case '2': colorEstado = "verde";
+            case 2: var colorEstado = "verde";
                 break;
-            case '3': colorEstado = "anaranjado";
+            case 3: var colorEstado = "anaranjado";
                 break;
-            case '4': colorEstado = "rojo";
+            case 4: var colorEstado = "rojo";
                 break;
             default: colorEstado = "default";
                 break;
         }
 
         var existePreconsultaGuardada = preConsultaGuardada(id_cliente,id);
-        var existeCirugiaGuardada = cirugiaGuardada(id);
-        console.log(existeCirugiaGuardada);
+        /*console.log(existePreconsultaGuardada);*/
 
-        result += '<div class="panel azulPanel" tipoCita="'+tipoCita+'" style="color:white;margin-top: 10px;">';
+        result += '<div class="panel azulPanel" tipoCita="'+tipoCita+'" style="margin-top: 10px;">';
 
-        @if(Entrust::can('atender_consulta'))
-            if (existePreconsultaGuardada == 'noExistePreConsulta'){
-                if(tipo == 'Consulta') {
-                    result += '<a onclick="directoConsulta(this)" fecha="'+fecha+'" id="'+id+'" id_padecimiento="'+id_padecimiento+'" id_cliente="'+id_cliente+'" estado="'+estado+'" title="Directo a Consulta." style="color:white;text-decoration: none" class="azulPanel cursor">';
-                }else{
-                    result += '<a href="/dr_basico/cirugias/'+id+'/preparar" onclick="inicioCirugia('+id+','+id_cliente+')" title="Pasar a Cirugía." style="color:white;text-decoration: none" class="azulPanel cursor">';
-                }
-            }else {
-                result += '<a href="clientes/historial/'+id_cliente+'/'+id+'" dato="'+dato+'" title="Pasar a Consulta." style="color:white; text-decoration: none" class="azulPanel">';
-            }
-        @endif
+        if (existePreconsultaGuardada == 'noExistePreConsulta'){
+            result += '<a onclick="directoConsulta(this)" fecha="'+fecha+'" id="'+id+'" id_padecimiento="'+id_padecimiento+'" id_cliente="'+id_cliente+'" estado="'+estado+'" title="Directo a Consulta." style="color:white;text-decoration: none" class="azulPanel">';
+        }else {
+            result += '<a href="clientes/historial/'+id_cliente+'/'+id+'" dato="'+dato+'" title="Pasar a Consulta." style="color:white; text-decoration: none" class="azulPanel">';
+        }
 
         result += '<strong>'+hora+' </strong><strong class="pull-right">'+paciente +'</strong>';
         result += '<div class = "panel-heading">';
         result += '<div class = "row">';
-        result += '<div class = "text-right"><div class = "huge text-right">' + tipo + '@if(Entrust::can('atender_consulta'))<i class="fa fa-arrow-circle-right fa-fw"></i>@endif</div><div>';
+        result += '<div class = "text-right"><div class = "huge text-right">' + tipo + '</div><div>';
         result += '</div></a>';
         result += '</div>';
         result += '</div>';
@@ -509,19 +522,29 @@
         }
 
         //Reagendar
-        @if(Entrust::can('ver_servicios'))
-            if (para == 1){
-                result += '<a title="Pendiente de Reagendar" href="/dr_basico/servicios/'+id+'/edit" class="removerDec rojo" style="padding-left: 16px;"> <i class="iconosfuente reagendar"> </i></a>';
-            } else {
-                result += '<a title="Reagendar" href="/dr_basico/servicios/'+id+'/edit" class="removerDec" style="padding-left: 16px;"> <i class="iconosfuente reagendar"> </i></a>';
+        if (para == 1){
+            result += '<a title="Pendiente de Reagendar" href="/servicios/'+id+'/edit" class="removerDec rojo"> <i class="fa fa-refresh fa-fw"> </i></a>';
+        } else {
+            result += '<a title="Reagendar" href="/servicios/'+id+'/edit" class="removerDec"> <i class="fa fa-refresh fa-fw"> </i></a>';
+        }
+
+        //Seguimiento
+        if (para == 2){
+            if (id_padecimiento != null){
+                result += '<a title="Pendiente de Seguimiento" href="/servicios/'+id+'/seguimiento/cita" class="removerDec rojo"> <i class="fa fa-share-square-o fa-fw"> </i></a>';
             }
-        @endif
+        } else {
+            if (id_padecimiento != null){
+                result += '<a title="Seguimiento" href="/servicios/'+id+'/seguimiento/cita" class="removerDec"> <i class="fa fa-share-square-o fa-fw"> </i></a>';
+            }
+        }
+
 
         //Preconsultas
-        if(tipo == 'Consulta') {
-            if (existePreconsultaGuardada == 'noExistePreConsulta'){
-                result += '<a onclick="informacionConsulta(this)" fecha="' + fecha + '" id="' + id + '" id_padecimiento="' + id_padecimiento + '" id_cliente="' + id_cliente + '" estado="' + estado + '" title="Valoración pre-consulta." href="#" class="removerDec rojo" data-toggle="modal" data-target="#modalConsulta"> <i class = "fa fa-product-hunt fa-fw"></i></a>';
-            }
+        if (existePreconsultaGuardada == 'noExistePreConsulta'){
+            result += '<a onclick="informacionConsulta(this)" fecha="'+fecha+'" id="'+id+'" id_padecimiento="'+id_padecimiento+'" id_cliente="'+id_cliente+'" estado="'+estado+'" title="Valoración pre-consulta." href="#" class="removerDec rojo" data-toggle="modal" data-target="#modalConsulta"> <i class = "fa fa-product-hunt fa-fw"></i></a>';
+            //separador1
+            /*result += '<span class="separador1"></span>';*/
         }
 
         //Archivo
@@ -532,55 +555,33 @@
         //Recordatorio
         result += '<a title="Enviar Recordatorio" id_servicio="'+id+'" id_cliente="'+id_cliente+'" href="#" onclick="crearCorreo(this)"><i class = "fa fa-paper-plane fa-fw"></i></a>';
 
+        //Borrar
+        result += '<a href="#" data-slug="servicios" data-id="'+id+'" onclick="return borrarElemento(this)"><i class = "fa fa-times fa-fw" title="Eliminar Cita"> </i></a>';
+
         //Estado
         result += '<a data-id="'+id+'" onclick="return cambiarEstado(this)" class="cursor"><i class = "'+colorEstado+' fa fa-circle fa-fw" title="Cambiar Estado del progreso de la Cita"> </i></a>';
 
-        //Seguimiento
-        @if(Entrust::can('crear_servicios'))
-            if (para == 2){
-                if (id_padecimiento != null){
-                    result += '<a title="Pendiente de Seguimiento" href="/dr_basico/servicios/'+id+'/seguimiento/cita" class="removerDec rojo"> <i class="fa fa-share-square-o fa-fw"> </i></a>';
-                }
-            } else {
-                if (id_padecimiento != null){
-                    result += '<a title="Seguimiento" href="/dr_basico/servicios/'+id+'/seguimiento/cita" class="removerDec"> <i class="fa fa-share-square-o fa-fw"> </i></a>';
-                }
-            }
-        @endif
-
         /********************************************* Separador del menu lateral *************************************/
-        @if(Entrust::can('eliminar_servicios'))
-            //Borrar
-            result += '<a href="#" data-slug="servicios" data-id="'+id+'" onclick="return borrarElemento(this)" class="pull-right" style="margin-right: -20px;margin-bottom: -15px;">';
-            result +=   '<span class="fa-stack" style="margin-top: 12px;">';
-            result +=       '<i class = "fa fa-times fa-stack-1x" style="font-size: 11px;" title="Borrar Cita"></i>';
-            result +=       '<i class="fa fa-circle-o fa-stack-1x rojo" style="font-size: 16px;"></i>';
-            result +=   '</span>';
-            result += '</a>';
-        @endif
-
-        //Historial del paciente
         @if(Entrust::can('atender_consulta'))
-        result += '<a href="clientes/historial/'+id_cliente+'" class="pull-right removerDec"> <i class="glyphicon glyphicon-paste fa-fw" title="Historial del Paciente"> </i> </a>';
-        //receta o prerarar cirugia
-        if (tipo != 'Consulta') {
-            //si no es consulta se supone que es cirugia y puede preparar cirugia
-            if (existeCirugiaGuardada == 'noExisteCirugiaGuardada') {
-                result += '<a href="/dr_basico/cirugias/' + id + '/preparar" title="Preparar Cirugía" onclick="inicioCirugia(' + id + ',' + id_cliente + ')" class="removerDec pull-right"> <i class="fa fa-user-md fa-fw rojo"> </i></a>';
-            }else {
-                result += '<a href="/dr_basico/cirugias/' + id + '/preparar" title="Preparar Cirugía" onclick="inicioCirugia(' + id + ',' + id_cliente + ')" class="removerDec pull-right"> <i class="fa fa-user-md fa-fw"> </i></a>';
+            //ficha del paciente
+            result += '<a href="clientes/historial/'+id_cliente+'" class="pull-right removerDec"> <i class="fa fa-heartbeat fa-fw" title="Ficha del Paciente"> </i> </a>';
+            //receta o prerarar cirugia
+            if (tipo != 'Consulta') {
+                //si no es consulta se supone que es cirugia y puede preparar cirugia
+                result += '<a href="/cirugias/'+id+'/preparar" title="Preparar Cirugía" class="removerDec pull-right"> <i class="fa fa-user-md fa-fw"> </i></a>';
+            }else{
+                //Receta si es consulta se puede crear la receta
+                result += '<a onclick="receta(this)" id_servicio="'+id+'" id_cliente="'+id_cliente+'" paciente="'+paciente+'" fecha="'+fecha+'" title="Crear Receta" href="#" class="pull-right removerDec" data-toggle="modal" data-target="#modalReceta"> <i class="fa fa-pencil-square-o fa-fw"> </i></a>';
+                //Consulta
+                if (existePreconsultaGuardada != 'noExistePreConsulta'){
+                    result += '<a onclick="directoConsulta(this)" fecha="'+fecha+'" id="'+id+'" id_padecimiento="'+id_padecimiento+'" id_cliente="'+id_cliente+'" estado="'+estado+'" title="Directo a Consulta." class="pull-right cursor"><i class = "fa fa-product-hunt fa-fw"></i></a>';
+                    //separador2
+                    /*result += '<span class="separador2"></span>';*/
+                }
             }
-        }else{
-            //Receta si es consulta se puede crear la receta
-            result += '<a onclick="receta(this)" id_servicio="'+id+'" id_cliente="'+id_cliente+'" paciente="'+paciente+'" fecha="'+fecha+'" title="Crear Receta" href="#" class="pull-right removerDec" data-toggle="modal" data-target="#modalReceta"> <i class="fa fa-pencil-square-o fa-fw"> </i></a>';
-            //Consulta
-            if (existePreconsultaGuardada != 'noExistePreConsulta'){
-                result += '<a onclick="directoConsulta(this)" fecha="'+fecha+'" id="'+id+'" id_padecimiento="'+id_padecimiento+'" id_cliente="'+id_cliente+'" estado="'+estado+'" title="Directo a Consulta." class="pull-right cursor"><i class = "fa fa-product-hunt fa-fw"></i></a>';
-                //separador2
-                /*result += '<span class="separador2"></span>';*/
-            }
-        }
         @endif
+        //Alerta reagendar
+        /*result += '<a title="Enviar alerta para reagendar esta Cita" id_servicio="'+id+'" onclick="reagendarAlerta(this)" class="removerDec cursor"> <i class="pull-right fa fa-refresh fa-fw" style="color: rgb(180, 6, 6) !important;"> </i></a>';*/
 
         result += '<div class = "clearfix"></div>';
         result += '</div>';
@@ -597,21 +598,24 @@
             startDate: '0d',
             todayHighlight: true,
             autoclose: true,
-            datesDisabled: arrayFecha_inhabil
+            datesDisabled: arrayFecha_inhabil,
         });
 
         //Marca fechas con servicios calendario superior derecho * comentado porque no funciona al dar clik sobre uno de estos dias
         /*$('#sandbox-container .calendario').datepicker('setDate', arrayServicios);*/
 
         /*$("th.today").css("background-color", "#EEEEEE");
-         $("td.active").removeClass('active').addClass('activoColor');*/
+        $("td.active").removeClass('active').addClass('activoColor');*/
+
     }
 
     function calendarioSemanal(arrayFecha_inhabil) {
+        /*$('.horaT').removeAttr('actividad');*/
 
         //deshabilitar fechas registradas como inhabiles en calendario semanal
         $('.dia').css("background-color", "");
         $.each(arrayFecha_inhabil, function( index, value ) {
+            /*alert( index + ": " + value );*/
             $("th[fecha='"+value+"']").css("background-color", "#BFBABA").removeAttr('onclick').attr('actividad','deshabilitado');
             $("td[fecha='"+value+"']").css("background-color", "#BFBABA").removeAttr('onclick').attr('actividad','deshabilitado');
         });
@@ -710,8 +714,10 @@
 
         if (minutos >= '00' && minutos <= '29'){
             minutos = '00';
-        }else{  minutos = '30'; }
-        horaAjustada = horas + ':' + minutos + ':00';
+        }else{
+            minutos = '30';
+        }
+            horaAjustada = horas + ':' + minutos + ':00';
         return horaAjustada;
     }
 
@@ -744,23 +750,7 @@
             minutos = '00';
             horas = parseFloat(horas) + 1;
         }
-        horaAjustada = horas + ':' + minutos + ':00';
-        return horaAjustada;
-    }
-
-    function menosUnMin(horaAajustar){
-        var separar = horaAajustar.split(':');
-        var horas = separar[0];
-        var minutos = separar[1];
-        var horaAjustada = '';
-
-        if (minutos == '30'){
-            minutos = '29';
-        }else if(minutos == '00'){
-            minutos = '59';
-            horas = parseFloat(horas) - 1;
-        }
-        horaAjustada = horas + ':' + minutos + ':00';
+            horaAjustada = horas + ':' + minutos + ':00';
         return horaAjustada;
     }
 
@@ -769,21 +759,12 @@
         if(turno == 'manana') {
             $('.pm').addClass('hidden');
             $('.am').removeClass('hidden');
-            $('.botonManana').addClass('botonActivo');
-            $('.botonTarde').removeClass('botonActivo');
-            $('.botonTodo').removeClass('botonActivo');
         }else if (turno == 'tarde'){
             $('.pm').removeClass('hidden');
             $('.am').addClass('hidden');
-            $('.botonManana').removeClass('botonActivo');
-            $('.botonTarde').addClass('botonActivo');
-            $('.botonTodo').removeClass('botonActivo');
         }else{
             $('.pm').removeClass('hidden');
             $('.am').removeClass('hidden');
-            $('.botonManana').removeClass('botonActivo');
-            $('.botonTarde').removeClass('botonActivo');
-            $('.botonTodo').addClass('botonActivo');
         }
     }
 
@@ -821,19 +802,17 @@
             }
         }).then(function(result) {
             $.ajax({
-                type: 'POST',
-                url: '/dr_basico/servicios/cambioEstado/'+id_servicio+'/'+result,
-                data:{
-                    _token: $('meta[name=csrf-token]').attr('content')
-                },success: function () {
+                async: false,
+                type: 'GET',
+                url: '/servicios/cambioEstado/'+id_servicio+'/'+result,
+                success: function () {
 
-                    /*var inicioCalendario = $('#inicioSemana').val();
+                    var inicioCalendario = $('#inicioSemana').val();
                     inicioCalendario = new Date(inicioCalendario);
                     agragarClases(inicioCalendario)
 
                     var fechaSeleccionada = $('#fechaSeleccionada').val();
-                    $("th[fecha='"+fechaSeleccionada+"']").trigger('onclick');*/
-                    window.location.reload();
+                    $("th[fecha='"+fechaSeleccionada+"']").trigger('onclick');
 
                 }, error: function (ajaxContext) {
                     swal("Espere", "Algo salio mal, reintente de nuevo o comuníquese con su administrador", "warning");
@@ -846,9 +825,13 @@
 
         $('div.activarAgenda').addClass('hidden');
         $('div.activarCalendario').removeClass('hidden');
+
         $('.horaT').children('span.agregarCitaMas').remove();
         $('.horaT').attr('onclick','agregarCita(this)');
+
         $('.horaT').append('<span class="cursor agregarCitaMas pull-right"><i class="fa fa-plus fa-fw" title="Agregar Cita"></i></span>');
+
+        /*$("td[actividad='deshabilitado']").children('span.agregarCitaMas').remove();*/
         $("td[actividad='deshabilitado']").find('span.agregarCitaMas').remove();
         $("td[actividad='deshabilitado']").removeAttr('onclick');
 
@@ -858,12 +841,13 @@
 
         $('div.activarAgenda').removeClass('hidden');
         $('div.activarCalendario').addClass('hidden');
-        $('.horaT').find('span.agregarCitaMas').remove();
-        $("td[actividad='si']").attr('onclick','vistaLateralHora(this)');
 
+        /*$('.horaT').children('span.agregarCitaMas').remove();*/
+        $('.horaT').find('span.agregarCitaMas').remove();
+
+        $("td[actividad='si']").attr('onclick','vistaLateralHora(this)');
     }
 
-    //preconsulta
     function informacionConsulta(elemento){
 
         var id_cliente = $(elemento).attr('id_cliente');
@@ -898,6 +882,7 @@
         $('#fechaRegreso').val(fecha);
         $('.guardarConsulta').attr('id_cliente', id_cliente);
         $('.guardarConsulta').attr('id_servicio',id_servicio);
+        $('.pasarConsulta').attr('id_servicio',id_servicio);
         $('.historialCliente').attr('href','clientes/historial/'+id_cliente);
         $('.pasarConsulta').attr('href','clientes/historial/'+id_cliente+'/'+id_servicio);
         $('.guardarConsulta').removeClass('hidden');
@@ -905,7 +890,7 @@
 
         $.ajax({
             type: 'Get',
-            url: '/dr_basico/servicios/datos/ultimaVisita/'+id_cliente,
+            url: '/servicios/datos/ultimaVisita/'+id_cliente,
             async: false,
             success: function(data){
 
@@ -933,8 +918,9 @@
                     $('#peso').val('');
                     $('#estatura').val('');
 
-                    swal("Paciente Nuevo","Favor de llenar todos los datos","warning");
+                    swal("Espere","Paciente Nuevo, favor de llenar todos los datos","warning");
                 }
+
                 if(data.id_servicio == id_servicio){
                     $('.guardarConsulta').addClass('hidden');
                     $('.pasarConsulta').removeClass('hidden');
@@ -948,7 +934,7 @@
     function directoConsulta(elemento){
 
         var id_cliente = $(elemento).attr('id_cliente');
-        /*var id_clienteFin = $(elemento).attr('id_cliente');*/
+        var id_clienteFin = $(elemento).attr('id_cliente');
         var id_padecimiento = $(elemento).attr('id_padecimiento');
         var id_servicio = $(elemento).attr('id');
         var fecha = $(elemento).attr('fecha');
@@ -967,7 +953,7 @@
 
         $.ajax({
             type: 'Get',
-            url: '/dr_basico/servicios/datos/ultimaVisita/'+id_cliente,
+            url: '/servicios/datos/ultimaVisita/'+id_cliente,
             async: false,
             success: function(data){
 
@@ -989,7 +975,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '/dr_basico/guardarInfoConsulta/'+id_servicio,
+                        url: '/guardarInfoConsulta/'+id_servicio,
                         data:{
                             _token: $('meta[name=csrf-token]').attr('content'),
                             id_cliente: id_cliente,
@@ -1000,9 +986,11 @@
                             peso: peso,
                             estatura: estatura,
                             id_padecimiento:id_padecimiento
-                        },success: function(){
-                            var url = '"'+'/dr_basico/clientes/historial/'+id_cliente+'/'+id_servicio+'"';
+                        },
+                        success: function(){
+                            var url = '"'+'/clientes/historial/'+id_cliente+'/'+id_servicio+'"';
                             setTimeout("location.href = "+url,0);
+
                         },error: function (ajaxContext) {
                             swal("Espere","Algo salio mal, reintente de nuevo","warning");
                         }
@@ -1029,7 +1017,7 @@
         $('.id_padecimiento').html("");
         $.ajax({
             type: 'GET',
-            url: '/dr_basico/padecimientosCliente/'+id_cliente,
+            url: '/padecimientosCliente/'+id_cliente,
             success: function(data){
                 if (data == ''){
                     $('.clasePadecimiento').addClass('hidden');
@@ -1052,7 +1040,7 @@
         $('.id_padecimiento').html("");
         $.ajax({
             type: 'GET',
-            url: '/dr_basico/padecimientosCliente/'+id_cliente,
+            url: '/padecimientosCliente/'+id_cliente,
             success: function(data){
                 if (data == ''){
                     $('.clasePadecimiento').addClass('hidden');
@@ -1072,32 +1060,19 @@
     }
 
     function pagar(id){
-        swal({
-            title: 'Espere',
-            text: "¿Seguro de marcar como pagado?",
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonText: "Cancelar",
-            cancelButtonClass: 'textoNegro',
-            cancelButtonColor: "#E0E0E0",
-            confirmButtonColor: "#449D44",
-            confirmButtonText: 'Si, estoy seguro'
-        }).then(function() {
-
-            $.ajax({
-                type: 'POST',
-                url: '/dr_basico/servicios/pagar/'+id,
-                data:{
-                    _token: $('meta[name=csrf-token]').attr('content')
-                },
-                success: function(data){
-                    swal("Recibo pagado","","success");
-                    window.location.reload();
-                },error: function (ajaxContext) {
-                    swal("Espere","Algo salio mal, reintente de nuevo","warning");
-                }
-            });
-        })
+        $.ajax({
+            type: 'POST',
+            url: '/servicios/pagar/'+id,
+            data:{
+                _token: $('meta[name=csrf-token]').attr('content'),
+            },
+            success: function(data){
+                swal("Recibo pagado","","success");
+                window.location.reload();
+            },error: function (ajaxContext) {
+                swal("Espere","Algo salio mal, reintente de nuevo","warning");
+            }
+        });
     }
 
     function GuardarConsulta(elemento){
@@ -1114,7 +1089,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/dr_basico/guardarInfoConsulta/'+id_servicio,
+            url: '/guardarInfoConsulta/'+id_servicio,
             data:{
                 _token: $('meta[name=csrf-token]').attr('content'),
                 id_cliente: id_cliente,
@@ -1145,9 +1120,8 @@
         var respuesta = '';
         $.ajax({
             type: 'Get',
-            url: '/dr_basico/servicios/datos/ultimaVisita/'+id_cliente,
+            url: '/servicios/datos/ultimaVisita/'+id_cliente,
             async: false,
-
             success: function(data){
                 if (data != ''){
                     if(data.id_servicio == id_servicio){
@@ -1157,28 +1131,6 @@
                     }
                 }else{
                     respuesta = 'noExistePreConsulta';
-                }
-                return respuesta;
-            }
-        });
-        return respuesta;
-    }
-
-    function cirugiaGuardada(id_servicio){
-        var respuesta = '';
-        $.ajax({
-            type: 'Get',
-            url: '/dr_basico/cirugias/existe/cirugiaGuardada/'+id_servicio,
-            async: false,
-            success: function(data){
-                if (data != ''){
-                    if(data.id_servicio == id_servicio){
-                        respuesta = 'existeCirugiaGuardada';
-                    }else{
-                        respuesta = 'noExisteCirugiaGuardada';
-                    }
-                }else{
-                    respuesta = 'noExisteCirugiaGuardada';
                 }
                 return respuesta;
             }
@@ -1199,10 +1151,76 @@
         var id_servicio = $(elemento).attr('id_servicio');
         $.ajax({
             type: 'GET',
-            url: '/dr_basico/reagendarAlerta/'+id_servicio,
+            url: '/reagendarAlerta/'+id_servicio,
             success: function(data){
                 swal("Enviada","Se envió alerta para reagendar el servicio","success");
                 window.setTimeout(function(){location.reload()},500)
+            },error: function (ajaxContext) {
+                swal("Espere","Algo salio mal, reintente de nuevo","warning");
+            }
+        });
+    }
+
+    function receta(este){
+
+        var hoy = new Date();
+        var fecha = $.datepicker.formatDate('yy-mm-dd',new Date(hoy));
+
+        var paciente = $(este).attr('paciente');
+        var id_servicio = $(este).attr('id_servicio');
+        var id_cliente = $(este).attr('id_cliente');
+        $('#receta').val('');
+        $('.paciente').html(paciente);
+        $('.fecha_receta').html(fecha);
+        $('.guardarReceta').attr('id_servicio',id_servicio);
+        $('.guardarReceta').attr('id_cliente',id_cliente);
+        $('.guardarReceta').attr('paciente',paciente);
+        $('.guardarReceta').attr('fecha',fecha);
+    }
+
+    function GuardarReceta(este){
+        var id_servicio = $(este).attr('id_servicio');
+        var paciente = $(este).attr('paciente');
+        var fecha = $(este).attr('fecha');
+        var id_cliente = $(este).attr('id_cliente');
+        var receta = $('#receta').val();
+        receta = receta.replace(/\r?\n/g, "<br>");
+
+        if (receta == ""){
+            return swal("Receta Vacia","Favor de ingresar la informacion de la Receta","warning");
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/dr_simple/servicios/receta',
+            data:{
+                _token: $('meta[name=csrf-token]').attr('content'),
+                id_servicio: id_servicio,
+                receta: receta,
+                paciente: paciente,
+                fecha: fecha,
+                id_cliente: id_cliente,
+            },success: function(data){
+                var result = '';
+                result += '<div style="max-height: 25cm">';
+                result += '<div class = "row" style="margin-top: 2.5cm;"></div>';
+                result += '<div style="margin-left: 1cm;margin-top: 4px;">'+paciente+'</div>';
+                result += '<div style="margin-left: 13cm;margin-top: -16px;">'+fecha+'</div>';
+                result += '<div class = "row" style="margin-top: 0.5cm;">'+receta+'</div>';
+                result += '</div>';
+
+                newWin= window.open("");
+                newWin.document.write(result);
+                if (!! navigator.userAgent.match(/Trident/gi)) {
+                    newWin.document.execCommand('print', false, null);
+                } else {
+                    newWin.print();
+                }
+                newWin.close();
+
+                $('#modalReceta').modal('toggle');
+                swal("Mandado a imprimir","","success");
+                $('#receta').val('');
             },error: function (ajaxContext) {
                 swal("Espere","Algo salio mal, reintente de nuevo","warning");
             }
@@ -1217,21 +1235,7 @@
         return formateada;
     }
 
-    function inicioCirugia(id_servicio,id_cliente){
-
-        $.ajax({
-            type: 'POST',
-            url: '/dr_basico/inicioCirugia/hora',
-            data:{
-                _token: $('meta[name=csrf-token]').attr('content'),
-                id_cliente: id_cliente,
-                id_servicio: id_servicio
-            }
-        });
-    }
-
 </script>
-
 {{-- Modal Citas--}}
 <div class="modal fade" id="modalCita" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg tamanoModal" role="document">
@@ -1249,8 +1253,7 @@
         </div>
     </div>
 </div>
-
-{{--Modal Preconsulta --}}
+{{--Modal Informacion --}}
 <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg tamanoModal" role="document">
         <div class="modal-content">
@@ -1263,11 +1266,11 @@
 
                     <div class="form-group col-xs-12 col-sm-6">
                         <div class="form-group col-xs-12">
-                            {!! Form::label('sintomas', 'Sintomas:') !!}
+                        {!! Form::label('sintomas', 'Sintomas:') !!}
                         </div>
                         <div class="form-group col-xs-12">
-                            {!! Form::textarea('sintomas', null, ['class' => 'form-control','rows'=>'5','maxlength' => 225]) !!}
-                            {!! Form::hidden('fechaRegreso', null, ['class' => 'form-control','id' => 'fechaRegreso']) !!}
+                        {!! Form::textarea('sintomas', null, ['class' => 'form-control','rows'=>'5']) !!}
+                        {!! Form::hidden('fechaRegreso', null, ['class' => 'form-control','id' => 'fechaRegreso']) !!}
                         </div>
                         <div class="form-group col-sm-6 col-lg-4 clasePadecimiento">
                             {!! Form::label('id_padecimiento', 'Padecimiento:') !!}
@@ -1282,23 +1285,23 @@
                         <div class="form-group col-xs-12">
                             <div class="form-group col-md-6">
                                 {!! Form::label('temperatura', 'Temperatura:') !!}
-                                {!! Form::text('temperatura', null, ['id'=>'temperatura','class'=>'form-control','placeholder'=>'Temperatura','maxlength' => 10]) !!}
+                                {!! Form::text('temperatura', null, ['id'=>'temperatura','class'=>'form-control','placeholder'=>'Temperatura']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('presion', 'Presion:') !!}
-                                {!! Form::text('presion', null, ['id'=>'presion','class'=>'form-control','placeholder'=>'Presión','maxlength' => 10]) !!}
+                                {!! Form::text('presion', null, ['id'=>'presion','class'=>'form-control','placeholder'=>'Presión']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('glucosa', 'Glucosa:') !!}
-                                {!! Form::text('glucosa', null, ['id'=>'glucosa','class'=>'form-control','placeholder'=>'Glucosa','maxlength' => 10]) !!}
+                                {!! Form::text('glucosa', null, ['id'=>'glucosa','class'=>'form-control','placeholder'=>'Glucosa']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('peso', 'Peso:') !!}
-                                {!! Form::text('peso', null, ['id'=>'peso','class'=>'form-control','placeholder'=>'Peso','maxlength' => 10]) !!}
+                                {!! Form::text('peso', null, ['id'=>'peso','class'=>'form-control','placeholder'=>'Peso']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('estatura', 'Estatura:') !!}
-                                {!! Form::text('estatura', null, ['id'=>'estatura','class'=>'form-control','placeholder'=>'Estatura','maxlength' => 10]) !!}
+                                {!! Form::text('estatura', null, ['id'=>'estatura','class'=>'form-control','placeholder'=>'Estatura']) !!}
                             </div>
                         </div>
                     </div>
@@ -1307,14 +1310,14 @@
             <div class="modal-footer container-fluid">
                 <a type="button" class="btn btn-success pull-right guardarConsulta" onclick="GuardarConsulta(this)">Guardar <i class = "glyphicon glyphicon-floppy-save"></i></a>
                 @if(Entrust::can('atender_consulta'))
-                    <a type="button" class="btn btn-success pull-right pasarConsulta hidden">Pasar a Consulta <i class = "fa fa-arrow-circle-right"></i></a>
+                <a type="button" class="btn btn-success pull-right pasarConsulta hidden">Pasar a Consulta <i class = "fa fa-arrow-circle-right"></i></a>
                 @endif
             </div>
         </div>
     </div>
 </div>
 
-{{--Modal Archivos--}}
+ {{--Modal Archivos--}}
 <div class="modal fade" id="modalArchivos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg tamanoModal" role="document">
         <div class="modal-content">
@@ -1332,14 +1335,13 @@
     </div>
 </div>
 
-{{--Modal Receta --}}
-{{--Modal CrearReceta --}}
+ {{--Modal Receta --}}
 <div class="modal fade" id="modalReceta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Receta <i class="fa fa-info-circle" title="Los medicamentos que requieran receta médica no podrán ser impresos en la función Venta Directa. Para la Receta Medica es necesario que imprima una receta de prueba y tomar las medidas necesarias para el membrete."></i> </h4>
+                <h4 class="modal-title" id="myModalLabel">Receta</h4>
             </div>
             <div class="modal-body container-fluid">
                 <div class="col-xs-12 col-sm-6">
@@ -1350,258 +1352,17 @@
                     {!! Form::label('fecha_receta', 'Fecha:') !!}
                     <div class="fecha_receta"></div>
                 </div>
-                <div class="col-xs-12 areaReceta hidden">
+                <div class="col-xs-12">
                     {!! Form::label('receta', 'Receta:') !!}
                     {!! Form::textarea('receta', null, ['class' => 'form-control']) !!}
                 </div>
-                <div class="form-group col-sm-6 col-lg-4">
-                    {!! Form::label('tipoReceta', 'Tipo de Receta:') !!}<BR>
-                    <input id="tipoReceta" type="checkbox" data-off-text="Receta Medica" data-off-color="primary"  data-on-text="Venta Directa" data-on-color="primary" checked="false" class="form-control">
-                </div>
-                <div class="grupo col-xs-12 pad0 areaMedicamentos" style="margin-top: 15px">
-                    <div class="col-xs-12 titulo page-header-sub">Receta</div>
-                    <div class="invisible">
-                        {!! Form::label('select-medicamento', 'Seleccionar Medicamento:') !!}
-                        <select id="select-medicamento" data-lista2="lista2" class="form-control">
-                            <option value="0">Selecciona medicamento</option>
-                            @foreach($medicamentos as $medicamento)
-                                <option componente="{!! $medicamento->componente !!}" value="{!! $medicamento->id !!}" tipo="{!! $medicamento->receta !!}">{!! $medicamento->componente !!} | {!! $medicamento->marca !!}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-10 col-md-4">
-                        {!! Form::label('select-medicamento', 'Seleccionar Medicamento:') !!} <i class=" info fa fa-info-circle" title="Dar click en el rectangulo de abajo para que aparesca el listado de medicamentos"></i>
-                        <input class="filterinput2 form-control" type="text" data-lista2="lista2" id="campo_producto"  placeholder="Seleccione medicamento">
-                        <ul id="lista2" class="lista invisible">
-                            @foreach($medicamentos as $medicamento)
-                                <li componente="{!! $medicamento->componente !!}" value="{!! $medicamento->id !!}" tipo="{!! $medicamento->receta !!}">{!! $medicamento->componente !!} | {!! $medicamento->marca !!}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    <div class="form-group col-sm-6 col-lg-4">
-                        {!! Form::label('periodo', 'Periodo:') !!}
-                        {!! Form::text('periodo', null, ['class' => 'form-control', 'maxlength' => '60']) !!}
-                    </div>
-
-                    <div class="col-sm-2">
-                        {!! Form::button('<i class = "fa fa-plus-circle" style="margin-top: 18px;"></i>', ['class' => 'btn btn-icon-sucess', 'onclick' => "agregarMedicamento(this)" , 'title' => 'Agregar Medicamento Seleccionado']) !!}
-                    </div>
-                    <div class="col-xs-12 medicamentos-header table-responsive" style="margin-top: 10px">
-                        <table class="table table-bordered" id="seccion-medicamentos">
-                            <thead>
-                            <tr>
-                                <th>Medicamento</th>
-                                <th>Periodo</th>
-                                <th>Quitar</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
             <div class="modal-footer container-fluid">
-                <a type="button" class="btn btn-success pull-right guardarReceta recetaMedica hidden" data-accion="m" onclick="guardarReceta(this)" style="margin-left: 5px;">
-                    Imprimir Receta Medica <i class="fa fa-print"></i>
-                </a>
-                <a type="button" class="btn btn-success pull-right guardarReceta ventaDirecta" data-accion="s" onclick="guardarReceta(this)">
-                    Imprimir Venta Directa <i class="fa fa-file-o"></i>
-                </a>
+                <a type="button" class="btn btn-success pull-right guardarReceta" onclick="GuardarReceta(this)">Crear Receta</a>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    $("#tipoReceta").bootstrapSwitch();
-    $(document).on('ready',function() {
-        //Medicamentos
-        $(".filterinput2").on("click",function(){
-            var lista2 = $(this).data("lista2");
-            $("#"+lista2+" li").on("click",function(){
-                $("#"+lista2).addClass('invisible').removeClass('show');
-                var value = $(this).attr("value");
-                $("select[data-lista2='"+lista2+"']").val(value).trigger("onchange");
-                $(".filterinput2[data-lista2='"+lista2+"']").val($(this).text());
-            })
-            $("#"+lista2).addClass('show').removeClass('invisible');
-        });
-        $(".filterinput2").change( function () {
-            var filter = $(this).val();
-            var lista2 = $(this).data("lista2");
-            if (filter) {
-                $("#"+lista2).find("li:not(:contains(" + filter + "))").addClass("invisible").removeClass("show");
-                $("#"+lista2).find("li:contains(" + filter + ")").addClass("show").removeClass("invisible");
-            } else {
-                $("#"+lista2).find("li").addClass("show").removeClass("invisible");
-            }
-        }).keyup( function () {
-            $(this).change();
-            //Ocultar añadido
-            $(".lista2").addClass('invisible').removeClass('show');
-        });
-
-        $('.guardarMedicamento').attr('accion','r');
-    });
-
-    $('#tipoReceta').on( "switchChange.bootstrapSwitch", function(e, data){
-        var tipoReceta = ($("#tipoReceta").prop("checked"))? 1:0;
-        if (tipoReceta == 1) {
-            console.log('venta directa');
-            $("li[tipo='0']").removeClass("hidden");
-            $(".recetaMedica").addClass("hidden");
-            $(".ventaDirecta").removeClass("hidden");
-        } else {
-            console.log('receta medica');
-            $("li[tipo='0']").addClass('hidden');
-            $("li[tipo='1']").removeClass('hidden');
-            $(".ventaDirecta").addClass("hidden");
-            $(".recetaMedica").removeClass("hidden");
-        }
-    });
-
-    function receta(este){
-
-        var hoy = new Date();
-        var fecha = $.datepicker.formatDate('yy-mm-dd',new Date(hoy));
-
-        var paciente = $(este).attr('paciente');
-        var id_cliente = $(este).attr('id_cliente');
-        $('.paciente').html(paciente);
-        $('.fecha_receta').html(fecha);
-        $('#receta').val('').removeAttr('readonly');
-        $('.reimprimirReceta').addClass('hidden');
-        $('.guardarReceta').attr('fecha',fecha).attr('id_cliente',id_cliente).attr('paciente',paciente);
-        $('.areaReceta').addClass('hidden');
-        $('.areaMedicamentos').removeClass('hidden');
-
-        $("#tipoReceta").bootstrapSwitch('disabled',false);
-        $("#seccion-medicamentos").children().children('tr').remove();
-    }
-
-    function guardarReceta(este){
-        var tipoReceta = ($("#tipoReceta").prop("checked"))? 1:0;
-        var fecha = $(este).attr('fecha');
-        var id_cliente = $(este).attr('id_cliente');
-        var componente = $(este).attr('componente');
-        var paciente = $(este).attr('paciente');
-        var accion = $(este).attr('data-accion');
-        /*var receta = $('#receta').val();*/
-
-        var medicamentos = [];
-        var medicamento = {};
-        $("#seccion-medicamentos tr").each(function(){
-            var id = $(this).attr("id");
-            var componente = $(this).children('td.componente').text();
-            var periodo = $(this).children('td.periodo').text();
-            if(id!="" && id!=undefined){
-                medicamento = {
-                    id:id,
-                    componente:componente,
-                    periodo:periodo,
-                };
-                medicamentos.push(medicamento);
-            }
-        });
-
-        if (medicamentos == ''){medicamentos = 'vacio';}
-        /*console.log(medicamentos);*/
-
-        if(medicamentos == 'vacio') {return swal("Espere","Es necesario apregar Medicamento","warning");}
-
-        $.ajax({
-            type: 'POST',
-            url: '/dr_basico/servicios/receta',
-            data:{
-                _token: $('meta[name=csrf-token]').attr('content'),
-                fecha: fecha,
-                id_cliente: id_cliente,
-                paciente:   paciente,
-                medicamentos:   medicamentos,
-                tipoReceta: tipoReceta,
-                /*receta:     receta,*/
-                accion:accion,
-            },success: function(data){
-                /*receta = receta.replace(/\r?\n/g, "<br>");*/
-                console.log(data);
-                if (accion == 'm') {
-                    var result = '';
-                    result += '<div class = "row" style="margin-top: 2.5cm;"></div>';
-                    result += '<div style="margin-left: 1cm;margin-top: 4px;">' + paciente + '</div>';
-                    result += '<div style="margin-left: 13cm;margin-top: -16px;">' + fecha + '</div>';
-                    for (var i = 0; i < medicamentos.length; i++) {
-                        result += '<div class = "row" style="margin-top: 0.5cm;">' + medicamentos[i].componente + ' - ' + medicamentos[i].periodo + '</div>';
-                    }
-                    newWin = window.open("");
-                    newWin.document.write(result);
-
-                    if (!!navigator.userAgent.match(/Trident/gi)) {
-                        newWin.document.execCommand('print', false, null);
-                    } else {
-                        newWin.print();
-                    }
-                    newWin.close();
-                }else{
-                    verPDF('/dr_basico/uploads/recetas/' + data)
-                }
-                $('#modalReceta').modal('toggle');
-                swal("Mandado a imprimir","","success");
-                $('#seccion-medicamentos').children().children('tr').remove();
-            },error: function (ajaxContext) {
-                swal("Espere","Algo salio mal, reintente de nuevo","warning");
-            }
-        });
-    }
-
-    function agregarMedicamento(){
-        var select = $("#select-medicamento option:selected").text();
-        var lista2 = $("input[data-lista2='lista2']").val();
-
-        // $.trim remueve espacios en blanco al comienzo y al final
-        if($.trim(select) == $.trim(lista2)) {
-
-            var ids = [];
-            $('#seccion-medicamentos tr').each(function(){
-                ids.push($(this).attr('id'));
-            });
-
-            var id = $("#select-medicamento").val();
-
-            if ($.inArray(id,ids) == -1){
-
-                var medicamento = $("#select-medicamento option:selected").text();
-                var componente = $("#select-medicamento option:selected").attr('componente');
-                var periodo = $("#periodo").val();
-
-                if(periodo == "")return swal("Espere","Es necesario el periodo", "warning");
-
-                var ay = "";
-                ay += "<tr id=" + id + ">";
-                ay += "<td class='componente'>"+componente+"</td>";
-                ay += "<td class='periodo'>"+periodo+"</td>";
-                ay += "<td><div class='minus col-xs-1' onclick='quitarElemento(this)'><i class='fa fa-times' title='Quitar solo este producto'></i></div></td>";
-                ay += "</tr>";
-                $("#seccion-medicamentos").append(ay);
-
-                $("input[data-lista2='lista2']").val("");
-                $("#periodo").val("");
-
-                $("#tipoReceta").bootstrapSwitch('disabled',true);
-            }else{
-                return swal("Espere","Este Medicamento ya esta agregado", "warning");
-            }
-        }else {
-            return swal("Espere", "Seleccione un Medicamento valido", "warning");
-        }
-    }
-
-    function quitarElemento(x){
-        $(x).parents('tr').remove();
-    }
-
-</script>
 @endsection
 
 

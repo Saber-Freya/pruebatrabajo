@@ -1,6 +1,7 @@
-@extends('app')@section('content')
+@extends('app')
+@section('content')
+@include('common.errors')
 <div class="container">
-    @include('common.errors')
     {!! Form::model($cirugia, ['route' => ['cirugias.update', $cirugia->id], 'method' => 'patch']) !!}
         @include('cirugias.fields')
     {!! Form::close() !!}

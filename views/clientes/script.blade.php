@@ -1,6 +1,5 @@
 <script>
     $(document).on('ready',function() {
-        var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         $('#fecha_nacimiento').datepicker({
             format        : "yyyy-mm-dd",
             todayBtn      : "linked",
@@ -9,32 +8,6 @@
             autoclose     : true,
             todayHighlight: true,
             minDate: 0
-        });
-        $("#edoF").on("change", function(){
-            if($(this).val() == 0){
-                return;
-            }else{
-                $.post('{!! url("clientes/getCiudadesByEdoId") !!}', {
-                    _token: $('meta[name=csrf-token]').attr('content'),
-                    id: $(this).val()
-                }).done(function (data) {
-                    if(data){
-                        var res = "";
-                        for(var i=0; i<data.length; i++){
-                            res += "<option value='"+data[i]['id']+"'>"+data[i]['title']+"</option>";
-                        }
-                        $("#cdF").html(res);
-                        @if(isset($cliente->facturacion))
-                            $("#cdF").val("{!! $cliente->facturacion->cd !!}");
-                        @else
-                           $("#cdF").val($("#cd").val());
-                        @endif
-                        $("#cdF").removeAttr('readonly');
-                    }
-                }).fail(function () {
-                    swal("Error", "No se pudo conectar con el servidor", "error");
-                });
-            }
         });
     });
 
@@ -56,18 +29,8 @@
 
     function agregarEmail(){
 
-        var email = $("#email").val().trim();
-        var emailAgregado = "";
-        var existe = false;
-
+        var email = $("#email").val();
         if(email !="") {
-            $('td.email').each(function(){
-                emailAgregado = $(this).html().trim();
-                if(email == emailAgregado) {existe = true; return existe}
-            });
-
-            if (existe == true)return swal("Espere", "Este Correo ya esta agregado", "warning");
-            if(!validarEmail(email)) return swal("Espere", "Ingrese un campo de Correo Electrónico Valido", "warning");
             var ids = [];
 
             $('#seccion-emails tr').each(function(){
@@ -78,7 +41,7 @@
             res += "<tr id='"+email+"'><td class='email'>" + email + "</td>";
             res += "<td><div class='minus col-xs-1' onclick='quitarEmail(this)'><i class='fa fa-times' title='Quitar solo este E-mail'></i></div></td></tr>";
             $("#seccion-emails").append(res);
-            /*$('#select-email').append('<option value="'+email+'" selected="selected">'+email+'</option>');*/
+            $('#select-email').append('<option value="'+email+'" selected="selected">'+email+'</option>');
             $("#email").val("");
 
         }else { return swal("Falta Correo", "", "warning"); }
@@ -94,15 +57,13 @@
         var nombre = $("#nombre").val().trim();
         var apellido = $("#apellido").val().trim();
         var calle = $("#calle").val().trim();
-        var no_exterior = $("#num_ext").val().trim();
-        var no_interiior = $("#num_int").val().trim();
-        var colonia = $("#col").val().trim();
+        var no_exterior = $("#no_exterior").val().trim();
+        var no_interiior = $("#no_interiior").val().trim();
+        var colonia = $("#colonia").val().trim();
         var tel = $("#tel").val().trim();
         var sangre = $("#sangre").val();
         var sexo = $("#sexo").val();
         var fecha_nacimiento = $("#fecha_nacimiento").val();
-        console.log(fecha_nacimiento);
-        var etnicidad = $("#etnicidad").val();
         /* -------- ficha medica ---------- */
         var asma = ($("#asma").prop("checked"))? 0:1;
         var ulsera = ($("#ulsera").prop("checked"))? 0:1;
@@ -134,16 +95,17 @@
         var razon_social = $("#razon_social").val().trim();
         var rfc = $("#rfc").val().trim();
         var metodo_pago = $("#metodo_pago").val().trim();
-        var num_cuenta = $("#numCuenta").val().trim();
-        var aseguradora = $("#aseguradora").val().trim();
-        var emailF = $("#emailF").val().trim();
-        var calleF = $("#calleF").val().trim();
-        var num_ext = $("#num_extF").val().trim();
-        var num_int = $("#num_intF").val().trim();
-        var col = $("#colF").val().trim();
-        var edo = $("#edoF").val();
-        var cd = $("#cdF").val();
-        var cp = $("#cpF").val().trim();
+        var num_cuenta = $("#num_cuenta").val().trim();
+        var calle_pub = $("#calle_pub").val().trim();
+        var num_ext = $("#num_ext").val().trim();
+        var num_int = $("#num_int").val().trim();
+        var col = $("#col").val().trim();
+        var pais = $("#pais").val().trim();
+        var edo = $("#edo").val();
+        var cd = $("#cd").val();
+        var cp = $("#cp").val().trim();
+        var localidad = $("#localidad").val().trim();
+        /* ------------------------------------------- */
 
         // ----------> Validaciones <---------------
         if(!validarNoVacio(nombre)) return swal("Espere", "Es necesario agregar el nombre de contacto", "info");
@@ -155,9 +117,11 @@
         if(factura && !validarNoVacio(calle)) return swal("Espere", "Es necesario agregar la calle", "info");
         if(factura && !validarNoVacio(num_ext)) return swal("Espere", "Es necesario agregar el numero exterior", "info");
         if(factura && !validarNoVacio(col)) return swal("Espere", "Es necesario agregar la colonia", "info");
+        if(factura && !validarNoVacio(pais)) return swal("Espere", "Es necesario ingresar el país", "info");
         if(factura && edo == 0) return swal("Espere", "Es necesario seleccionar un estado", "info");
         if(factura && cd == 0) return swal("Espere", "Es necesario seleccionar una ciudad", "info");
         if(factura && !validarNoVacio(cp)) return swal("Espere", "Es necesario ingresar el código postal", "info");
+        if(factura && !validarNoVacio(localidad)) return swal("Espere", "Es necesario ingresar la localidad", "info");
 
         //Contactos
         var contactos = [];
@@ -165,22 +129,10 @@
         $("#seccion_contactos > .contacto").each(function (i) {
             var obj = {};
             var contacto = $(this).find('.contacto').html().trim();
-            var parentesco_id = $(this).find('.parentesco').attr('id');
-            var calleE = $(this).find('.calleE').html().trim();
-            var no_extE = $(this).find('.no_extE').html().trim();
-            var no_intE = $(this).find('.no_intE').html().trim();
-            var coloniaE = $(this).find('.coloniaE').html().trim();
-            var cpE = $(this).find('.cpE').html().trim();
             var tel_per = $(this).find('.tel_per').html().trim();
             var email_per = $(this).find('.email_per').html().trim();
 
             obj["contacto"] = contacto;
-            obj["parentesco_id"] = parentesco_id;
-            obj["calleE"] = calleE;
-            obj["no_extE"] = no_extE;
-            obj["no_intE"] = no_intE;
-            obj["coloniaE"] = coloniaE;
-            obj["cpE"] = cpE;
             obj["tel_per"] = tel_per;
             obj["email_per"] = email_per;
 
@@ -234,7 +186,6 @@
         formdata.append( 'sangre', sangre );
         formdata.append( 'sexo', sexo );
         formdata.append( 'fecha_nacimiento', fecha_nacimiento );
-        formdata.append( 'etnicidad', etnicidad );
         // ficha medica
         formdata.append( 'asma', asma );
         formdata.append( 'ulsera', ulsera );
@@ -262,21 +213,20 @@
         formdata.append( 'hernias_coment', hernias_coment );
         formdata.append( 'arterial_coment', arterial_coment );
         // datos para factura
-        formdata.append( 'factura', factura );
         formdata.append( 'nom_comercial', nom_comercial );
         formdata.append( 'razon_social', razon_social );
-        formdata.append( 'aseguradora', aseguradora );
         formdata.append( 'rfc', rfc );
         formdata.append( 'metodo_pago', metodo_pago );
         formdata.append( 'num_cuenta', num_cuenta );
-        formdata.append( 'calleF', calleF );
+        formdata.append( 'calle_pub', calle_pub );
         formdata.append( 'num_ext', num_ext );
         formdata.append( 'num_int', num_int );
         formdata.append( 'col', col );
+        formdata.append( 'pais', pais );
         formdata.append( 'edo', edo );
         formdata.append( 'cd', cd );
         formdata.append( 'cp', cp );
-        formdata.append( 'emailF', emailF );
+        formdata.append( 'localidad', localidad );
         formdata.append( 'contactos', contactos );
 
         if(id_cliente == undefined){
@@ -293,7 +243,7 @@
                 success: function(data){
                     waitingDialog.hide();
                     swal("Guardado","","success");
-                    setTimeout("location.href = '/dr_basico/clientes'",0);
+                    setTimeout("location.href = '/clientes'",0);
 
                 },error: function (ajaxContext) {
                     waitingDialog.hide();
@@ -313,12 +263,10 @@
                 contentType: false,success: function(data){
                     waitingDialog.hide();
                     swal("Actualizado","","success");
-
-                    setTimeout("location.href = '/dr_basico/clientes'",0);
-
+                    setTimeout("location.href = '/clientes'",0);
                 },error: function (ajaxContext) {
                     waitingDialog.hide();
-                    swal("Espere","Algo salio mal, reintente de nuevo","warning");
+                    swal("Espere","Algo salio mal, reintente denuevo","warning");
                 }
             });
         }
@@ -473,36 +421,5 @@
                 }
         }
     }
-/**/
-function validarNoVacio(x) {
-    if(x == "")
-        return false;
-    else
-        return true;
-}
-function validarNumericoOrVacio(x){
-    if(/^\d+$/.test(x) || x == "")
-        return true;
-    else
-        return false;
-}
-function validar10Digitos(x) {
-    if(x.length > 10 || x.length < 10)
-        return false;
-    else
-        return true;
-}
-function validarEmail(x) {
-    var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
-    if(pattern.test(x))
-        return true;
-    else
-        return false;
-}
-function validarRFC(x) {
-    if(x.length > 13 || x.length < 12)
-        return false;
-    else
-        return true;
-}
+
 </script>

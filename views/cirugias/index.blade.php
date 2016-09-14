@@ -3,6 +3,11 @@
     @include('flash::message')
     <div class="row">
         <h2 class="pull-left">Cirugías</h2>
+        {{--<a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('cirugias.create') !!}">Agregar</a>--}}
+        <a class="btn btn-warning pull-right" style="margin-top: 25px" href = "{{ url('/servicios/inicio/todo') }}"
+           title="Registros capturados previos al Sistema."><i class="fa fa-heartbeat"></i> Historial
+        </a>
+        <i class="info fa fa-info-circle pull-right" style="margin-top: 30px;padding: 5px" title="Registros capturados previos al Sistema."></i>
     </div>
 
     <div class="col-xs-12">Hay {{ sizeof($cirugias) }} Cirugia(s)</div>
@@ -20,6 +25,7 @@
             <div class="table-responsive col-xs-12">
                 <table class="table">
                     <thead>
+                        {{--<th>ID</th>--}}
                         <th>Fecha</th>
                         <th>Nombre del Paciente</th>
                         <th>Convenio</th>
@@ -27,11 +33,10 @@
                         <th>Renta con IVA</th>
                         <th><i class="info fa fa-info-circle" title="Dar clic en el total de los Materiales para ver los detalles."></i> Recibo Material</th>
                         <th>Recibo</th>
-                        <th>Plaza</th>
+                        <th>Laser</th>
                         <th><i class="info fa fa-info-circle" title="Dar clic en la palabra Auxiliares para ver los detalles y/o agregar datos."></i> Auxiliares</th>
-                        <th>Pagado</th>
-                        <th>Comentarios</th>
-                        <th width="50px">Acción</th>
+                        <th><i class="info fa fa-info-circle" title="Colocar el cursor (puntero del ratón) sobre la palabra para ver la fecha."></i> CRYOABLACION</th>
+                        <th width="50px">Action</th>
                     </thead>
                     <tbody>
                     @foreach($cirugias as $cirugia)
@@ -46,7 +51,7 @@
                                     $color = '';
                                 }
                             }
-                            if ( $cirugia->status == 1){$status = "SI";}else{$status = "NO";}
+                            if ( $cirugia->cryo == 1){$cryo = "SI";}else{$cryo = "NO";}
                         ?>
                         <tr>
                             <td>{!! $cirugia->fecha !!}</td>
@@ -56,17 +61,16 @@
                             <td>$ {!! number_format($cirugia->renta, 2, '.', ',') !!}</td>
                             <td><a onclick="materiales(this)" id_cirugia="{!! $cirugia->id !!}" class="cursor removerDec" title="Ver Materiales de ésta Cirugía">$ {!! number_format($cirugia->total_material, 2, '.', ',') !!}</a></td>
                             <td>{!! $cirugia->recibo !!}</td>
-                            <td>{!! $cirugia->plaza !!}</td>
+                            <td>{!! $cirugia->laser !!}</td>
                             <td><a onclick="auxiliares(this)" id_cirugia="{!! $cirugia->id !!}" class="cursor removerDec" title="Ver Auxilires de ésta Cirugía" style="color: {!! $color !!}">Auxiliares</a></td>
-                            @if ($status == "NO")
-                                <td title="Sin Fecha de Pago">{!! $status !!}</td>
+                            @if ($cryo == "NO")
+                                <td title="No aplica">{!! $cryo !!}</td>
                             @else
-                                <td title="{!! $cirugia->fecha_pago !!}">{!! $status !!}</td>
+                                <td title="{!! $cirugia->fecha_cryo !!}">{!! $cryo !!}</td>
                             @endif
-                            <td>{!! $cirugia->comentarios !!}</td>
                             <td>
-                                <a title="Editar" href="/dr_basico/cirugias/{!! $cirugia->id_servicio !!}/preparar"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a title="Borrar" href="#" data-slug="cirugias" data-id="{!! $cirugia->id !!}" onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i></a>
+                                {{--<a title="Editar" href="{!! route('cirugias.edit', [$cirugia->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>--}}
+                                <a title="Borrar" href="#" data-slug="cirugias" data-id="{!! $cirugia->id !!}" onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -75,7 +79,7 @@
             </div>
         @endif
     </div>
-    {!!  str_replace('/cirugias', '/dr_basico/cirugias', $cirugias->render()) !!}
+    <?php echo $cirugias->render(); ?>
     <script>
         $("#document").ready(function(){
             $("#busquedaAvanzada").on("keyup",function(e){

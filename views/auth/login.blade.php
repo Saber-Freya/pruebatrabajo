@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang = "en">
+<html lang = "es">
 {{-- Links de CSS y JS--}}
 @include('layout/head')
 <body>
@@ -21,11 +21,11 @@
 						<fieldset>
 							<div class = "form-group">
 								<input class = "form-control" placeholder = "Usuario" name = "name" type = "text"
-									   value="admin" autofocus>
+									   autofocus>
 							</div>
 							<div class = "form-group">
 								<input class = "form-control" placeholder = "Password" name = "password"
-									   type = "password" value = "Entrar->2016">
+									   type = "password" value = "">
 							</div>
 							<div class = "form-group">
 								<div class = "col-md-6 col-md-push-3">

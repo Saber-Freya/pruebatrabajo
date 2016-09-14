@@ -43,6 +43,25 @@
                     <td style="width: 30%;">{!! $pago !!}</td>
                 </tr>
             @endforeach
+
+        {{--    <tr style="font-weight: bold;">
+                <td colspan="5"></td>
+                <td class="in-line" style="width: 12%; margin-left: 450px;">TOTALES: </td>
+                <td class="in-line" style="width: 12%;">--}}{{--${!!$total-$descuento !!}--}}{{--</td>
+                <td class="in-line" style="width: 12%;">--}}{{--{!!round ($sumaDiv/sizeof($serviciouctos), 2, PHP_ROUND_HALF_UP) !!}--}}{{--</td>
+            </tr>
+            <tr>
+                <td colspan="5"></td>
+                <td class="in-line" style=" margin-left: 450px;">Total efectivo: </td>
+                <td class="in-line" style="">--}}{{--${!! $totalEfectivo !!}--}}{{--</td>
+                <td class="in-line" style=""></td>
+            </tr>
+            <tr>
+                <td colspan="5"></td>
+                <td class="in-line" style="margin-left: 450px;">Total tarjeta: </td>
+                <td class="in-line" style="">--}}{{--${!! $totalTarjeta !!}--}}{{--</td>
+                <td class="in-line" style=""></td>
+            </tr>--}}
         </table>
     </body>
 </html>

@@ -31,7 +31,7 @@
         $.ajax({
             async  : false,
             type   : "GET",
-            url    : "/dr_basico/servicios/pendientes/hoy",
+            url    : "/servicios/pendientes/hoy",
             success: function (data) {
                 if(data == ""){
                     $('.boton_pendiente').removeClass('alert-on');
@@ -51,7 +51,7 @@
         $.ajax({
             async  : false,
             type   : "GET",
-            url    : "/dr_basico/servicios/reagendar/cita",
+            url    : "/servicios/reagendar/cita",
             success: function (data) {
                 if(data == ""){
                     $('.boton_reagendar').removeClass('alert-on');
@@ -69,7 +69,7 @@
         $.ajax({
             async  : false,
             type   : "GET",
-            url    : "/dr_basico/servicios/reagendar/cita",
+            url    : "/servicios/reagendar/cita",
             success: function (data) {
                 /*console.log(data);*/
                 if(data == ""){
@@ -85,9 +85,7 @@
                     result += "<th>Hora</th>";
                     result += "<th>Paciente</th>";
                     result += "<th>Para</th>";
-                    @if(Entrust::can('ver_servicios') || Entrust::can('crear_servicios'))
                     result += "<th>Acción</th>";
-                    @endif
                     result += "</thead>";
                     result += "<tbody>";
 
@@ -102,11 +100,9 @@
                             result += '<td>' + para + '</td>';
                             result += '<td>';
                             if(data[i].reagendar == 1) {
-                                result += '<a title="Reagendar" href="/dr_basico/servicios/' + data[i].id + '/edit" class="removerDec"> <i class="iconosfuente reagendar"> </i></a>';
+                                result += '<a title="Reagendar" href="/servicios/' + data[i].id + '/edit" class="removerDec"> <i class="fa fa-refresh"> </i></a>';
                             }else{
-                                @if(Entrust::can('crear_servicios'))
-                                    result += '<a title="Reagendar" href="/dr_basico/servicios/' + data[i].id + '/seguimiento/cita" class="removerDec"> <i class="fa fa-share-square-o"> </i></a>';
-                                @endif
+                                result += '<a title="Reagendar" href="/servicios/' + data[i].id + '/seguimiento/cita" class="removerDec"> <i class="fa fa-share-square-o"> </i></a>';
                             }
                             result += '</td>';
                         result += '</tr>';

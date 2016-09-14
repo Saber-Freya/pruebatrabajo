@@ -51,7 +51,7 @@
                             <td>{!! $tipo !!}</td>
                             <td>
                                 {{--<a title="Editar" href="{!! route('horarios.edit', [$horario->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>--}}
-                                @if(Entrust::can('eliminar_horarios'))<a title="Borrar" href="#" data-slug="horarios" data-id="{!! $horario->id !!}"  onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i></a>@endif
+                                @if(Entrust::can('eliminar_horarios'))<a title="Borrar" href="#" data-slug="horarios" data-id="{!! $horario->id !!}"  onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i></a>@endif
                             </td>
                         </tr>
                     @endforeach
@@ -60,6 +60,6 @@
             </div>
         @endif
     </div>
-    {!!  str_replace('/horarios', '/dr_basico/horarios', $horarios->render()) !!}
+    <?php echo $horarios->render(); ?>
 </div>
 @endsection

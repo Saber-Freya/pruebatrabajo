@@ -35,24 +35,34 @@ class UsuariosController extends AppBaseController{
             ->with('usuarios', $usuarios);
     }
 
+	/*public function getUsuarioData(){
+		$usuarios = $this->usuariosRepository->all();
+
+		return Datatables::of($usuarios)
+			->addColumn('action', function ($usuario) {
+				return '<a href = "/usuarios/' . $usuario->id . '/edit/">
+								<i class = "glyphicon glyphicon-edit"></i>
+							</a>
+							<a href = "#" data-slug = "usuarios" data-id = "' . $usuario->id . '"
+								onclick = "return borrarElemento(this)">
+	                            <i class = "glyphicon glyphicon-remove"></i>
+							</a>';
+			})
+			->make(true);
+	}*/
+
     public function create(){
         $lista_roles = Role::where('id','!=',1)->lists('display_name','id');
         $roles = DB::table('roles')->select()->get();
-        $listaEstados = DB::table('estados')->orderBy('title')->lists('title', 'id');
 
         return view('usuarios.create')
             ->with('roles', $roles)
-            ->with('lista_roles', $lista_roles)
-            ->with('listaEstados', $listaEstados);
+            ->with('lista_roles', $lista_roles);
     }
 
     public function store(CreateUsuariosRequest $request){
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-
-        $usuario = $this->usuariosRepository->store($input);
-        $this->usuariosRepository->storeRoleUser($input,$usuario->id);
-
+        $usuarios = $this->usuariosRepository->store($input);
         Flash::message('Guardado.');
         return redirect(route('usuarios.index'));
     }
@@ -77,7 +87,6 @@ class UsuariosController extends AppBaseController{
     public function edit($id){
         $lista_roles = Role::where('id','!=',1)->lists('display_name','id');
         $usuarios = $this->usuariosRepository->findUsuarios($id);
-        $listaEstados = DB::table('estados')->orderBy('title')->lists('title', 'id');
 
         if(empty($usuarios)){
             Flash::error('No se encontro.');
@@ -86,11 +95,10 @@ class UsuariosController extends AppBaseController{
 
         return view('usuarios.edit')
             ->with('usuarios', $usuarios)
-            ->with('lista_roles', $lista_roles)
-            ->with('listaEstados', $listaEstados);
+            ->with('lista_roles', $lista_roles);
     }
 
-    public function update($id,CreateUsuariosRequest $request){
+    public function update($id, CreateUsuariosRequest $request){
         $usuarios = $this->usuariosRepository->findUsuariosById($id);
 
         if(empty($usuarios)){
@@ -116,13 +124,6 @@ class UsuariosController extends AppBaseController{
             Flash::message('Borrado.');
             return redirect(route('usuarios.index'));
         }
-    }
-
-    public function ciudades($estado){
-        $ciudades = DB::table('ciudades')->leftjoin('estados','estados.id','=','ciudades.estado_id')
-            ->select('ciudades.*','ciudades.title as ciudad','estados.title as estado')
-            ->where('estado_id',$estado)->orderBy('title')->get();
-        return $ciudades;
     }
 
 }

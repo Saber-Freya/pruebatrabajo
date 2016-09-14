@@ -8,6 +8,8 @@
             autoclose:true,
         });
 
+        /*********************************************** Listas Search **********************************************/
+
         //Auxiliarea
         $(".filterinput").on("click",function(){
             var lista = $(this).data("lista");
@@ -60,94 +62,23 @@
             $(".lista2").addClass('invisible').removeClass('show');
         });
 
-        var hoy = moment(new Date()).format('YYYY-MM-DD');
-        $('#fecha_pago').val(hoy);
-
         //ocultar fecha si no esta encendido
-        $('#status').on( "switchChange.bootstrapSwitch", function(){
-            var status = ($("#status").prop("checked"))? 1:0;
-            if (status == 1) {
+        $('#cryo').on( "switchChange.bootstrapSwitch", function(){
+            var cryo = ($("#cryo").prop("checked"))? 1:0;
+            if (cryo == 1) {
                 $('.fecha_cryo').removeClass('hidden');
             } else {
                 $('.fecha_cryo').addClass('hidden');
             }
         });
 
-        @if(isset($cirugia))
-            $('.guardarCirugia').attr('accion','e');
-            $('.guardarCirugia').attr('id_cirugia','{!! $cirugia->id !!}');
-
-            $('#convenio').val('{!! $cirugia->convenio !!}');
-            $('#renta2').val('{!! $cirugia->renta !!}');
-            $('#renta').val('{!! $cirugia->renta !!}');
-            $('#recibo').val('{!! $cirugia->recibo !!}');
-            $('#plaza').val('{!! $cirugia->plaza !!}');
-            if ('{!! $cirugia->status !!}' == '0'){
-                $("#status").trigger("click");
-                $('#fecha_pago').val('');
-            }else{
-                $('#fecha_pago').val('{!! $cirugia->fecha_pago !!}');
-            }
-            if ('{!! $cirugia->iva !!}' != '0.00'){$("#porcentajeIva").trigger("click");}
-
-            $('#comentarios').val('{!! $cirugia->comentarios !!}');
-
-            //cargar auxiliares para editar
-            @if(count($auxiliaresE))
-                <?php  ?>
-                    var aux = "";
-                @foreach($auxiliaresE as $auxiliar)
-                    var id = '{!! $auxiliar->id_auxiliar !!}';
-                    var nombre = '{!! $auxiliar->nombre !!}';
-                    var apellido = '{!! $auxiliar->apellido !!}';
-
-                    aux += "<tr id="+id+">";
-                    aux += "<td>"+nombre+" "+apellido+"</td>";
-                    aux += "<td><div class='minus col-xs-1' onclick='quitarElemento(this)'><i class='fa fa-times' title='Quitar solo este producto'></i></div></td>";
-                    aux += "</tr>";
-                @endforeach
-                $("#seccion-auxiliares").append(aux);
-            @endif
-
-            //cargar materiales para editar
-            @if(count($materialesE))
-                <?php  ?>
-                    var mate = "";
-                @foreach($materialesE as $material)
-                    var id = '{!! $material->id_material !!}';
-                    var cantidad = '{!! $material->cantidad !!}';
-                    var material = '{!! $material->nom_prod !!}';
-                    var descripcion = '{!! $material->descripcion !!}';
-                    var precio = '{!! $material->precio !!}';
-
-                    precio = parseFloat(precio);
-                    var pre = precio.toFixed(2);
-                    var precioFormato = formatNumber.new(pre, "$");
-
-                    var importe = parseFloat(precio * cantidad);
-                    var imp = importe.toFixed(2);
-                    var importeFormato = formatNumber.new(imp, "$");
-
-                    mate += "<tr id=" + id + ">";
-                    mate += "<td cantidad='"+cantidad+"' class='cantidad'>"+cantidad+"</td>";
-                    mate += "<td>"+material+"</td>";
-                    mate += "<td>"+descripcion+"</td>";
-                    mate += "<td>"+precioFormato+"</td>";
-                    mate += "<td importe='"+importe+"' class='importe'>"+importeFormato+"</td>";
-                    mate += "<td><div class='minus col-xs-1' onclick='quitarElemento(this)'><i class='fa fa-times' title='Quitar solo este producto'></i></div></td>";
-                    mate += "</tr>";
-                @endforeach
-                $("#seccion-materiales").append(mate);
-                calcularTotal();
-            @endif
-        @endif
-
     });
 
     function agregarAuxiliar(){
         var select = $("#select-auxiliar option:selected").text();
         var lista = $("input[data-lista='lista']").val();
-
+        /*console.log('select '+select);
+        console.log('lista '+lista);*/
 
         // $.trim remueve espacios en blanco al comienzo y al final
         if($.trim(select) == $.trim(lista)) {
@@ -269,6 +200,7 @@
         var tot = total.toFixed(2);
         var totalFormato = formatNumber.new(tot, "$");
 
+
         $(".subtotal").html(subtotalFormato);
         $("#subtotal").val(subtotal);
         $(".iva").html(ivaFormato);
@@ -277,12 +209,9 @@
         $("#total").val(total);
         totalLetra = nn(total);
         $("#conletra").html(totalLetra+" "+divisa);
-        $('.seccion-totales').removeClass('hidden');
     }
 
     function guardarCirugia(){
-        var accion = $('.guardarCirugia').attr('accion');
-        var id_cirugia = $('.guardarCirugia').attr('id_cirugia');
 
         var materiales = [];
         var conceptos = {};
@@ -309,7 +238,7 @@
             }
         });
 
-        /*console.log(auxiliares);*/
+        console.log(auxiliares);
         if (materiales == ''){materiales = 'vacio';}
         if (auxiliares == ''){auxiliares = 'vacio';}
 
@@ -317,46 +246,42 @@
         var convenio = $("#convenio").val();
         var renta = $("#renta").val();
         var recibo = $("#recibo").val();
-        var plaza = $("#plaza").val();
-        var status = ($("#status").prop("checked"))? 1:0;
-        var fecha_pago = $("#fecha_pago").val();
+        var laser = $("#laser").val();
+        var cryo = ($("#cryo").prop("checked"))? 1:0;
+        var fecha_cryo = $("#fecha_cryo").val();
         var subtotal = $("#subtotal").val();
         var iva = $("#iva").val();
         var total = $("#total").val();
-        var comentarios = $("#comentarios").val();
-        console.log(fecha_pago);
 
         waitingDialog.show('Guardando...', {dialogSize: 'sm', progressType: 'warning'});
         $.ajax({
             type: 'POST',
-            url: '/dr_basico/cirugias/guardar',
+            url: '/cirugias/guardar',
             data: {
                 _token: $('meta[name=csrf-token]').attr('content'),
-                accion: accion,
-                id_cirugia: id_cirugia,
                 id_servicio: id_servicio,
                 convenio: convenio,
                 renta: renta,
                 recibo: recibo,
-                plaza: plaza,
-                status: status,
-                fecha_pago: fecha_pago,
+                laser: laser,
+                cryo: cryo,
+                fecha_cryo: fecha_cryo,
                 subtotal: subtotal,
                 iva: iva,
                 total: total,
                 auxiliares: auxiliares,
                 materiales: materiales,
-                comentarios: comentarios,
 
             },success: function (data) {
                 waitingDialog.hide();
                 swal("Guardado","","success");
-                setTimeout("location.href = '/dr_basico/cirugias'",0);
+                setTimeout("location.href = '/cirugias'",0);
             },error: function (ajaxContext) {
                 waitingDialog.hide();
                 swal("Espere","Algo salio mal, reintente de nuevo","warning");
             }
         });
+
     }
 
 </script>

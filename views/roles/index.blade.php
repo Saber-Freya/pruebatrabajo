@@ -33,7 +33,7 @@
                                         <a href="{!! route('roles.edit', [$role->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>
                                     @endif
                                     @if(Entrust::can('eliminar_roles'))
-                                        <a title="Borrar" href="#" data-slug="roles" data-id="{!! $role->id !!}" onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i></a>
+                                        <a title="Borrar" href="#" data-slug="roles" data-id="{!! $role->id !!}" onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i></a>
                                     @endif
                                 </td>
                             </tr>
@@ -43,6 +43,5 @@
                 </table>
             @endif
         </div>
-        {!!  str_replace('/roles', '/dr_basico/roles', $roles->render()) !!}
     </div>
 @endsection

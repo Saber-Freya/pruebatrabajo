@@ -1,7 +1,6 @@
 <script>
     $(document).on('ready', function(){
         rol_id = null;
-
         $('#select-permisos').multiSelect({
             selectableHeader: "<div class='custom-header'>Permisos no asignados</div>",
             selectionHeader: "<div class='custom-header'>Permisos asignados</div>",
@@ -10,33 +9,18 @@
             afterDeselect:function(value){ //enviamos al servidor el id del permiso seleccionado
             }
         });
-
         $('.modi').on("click", function(){
             $('.modi').removeClass('active');
             $(this).addClass('active');
             var modulo = $(this).attr("modulo");
             if(modulo=="todos"){
                 $(".ms-elem-selectable").removeClass('invisible');
-            }else{
+            }
+            else{
                 $(".ms-elem-selectable").addClass('invisible');
                 $(".ms-elem-selectable[modulo='"+modulo+"']").removeClass('invisible');
             }
         });
-
-        //Para que no muestre espacio vacion cuando desasignas un permiso
-        $('.ms-elem-selection').on("click", function(){
-            var elemento = $(this).attr("id");
-            var elementoSeparado = elemento.split("-");
-            var idEle = elementoSeparado[0];
-
-                $("li[id='"+idEle+"-selectable']").delay(1).queue(function(){
-                    /*aca lo que quiero hacer después de los 1 milisegundo de retraso ejemplo 2000 para 2 segundos*/
-                    $(this).removeAttr("style"); //quito el display: list-item para que no muestre eun espacio vacio;
-                    $(this).dequeue(); //continúo con el siguiente ítem en la cola
-                });
-
-        });
-
         $('.get-permisos').on('click', function(){
             rol_id = $(this).attr('rol_id');
             $.ajax({
@@ -81,17 +65,19 @@
             return swal("Espere", "Necesitas agregar al menos un permiso", "warning");
 
         $.post('{!! url('/roles/guardarRol') !!}', {
-            _token: $('meta[name=csrf-token]').attr('content'),
-            name: name,
-            display_name: display_name,
-            permisos_id: permisos_id,
-            description:description
-        }).done(function (data) {
-            swal("Guardado","","success");
-            setTimeout("location.href = '/dr_basico/roles'",0);
-        }).fail(function () {
-            swal("Error", "No se pudo conectar con el servidor", "error");
-        });
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    name: name,
+                    display_name: display_name,
+                    permisos_id: permisos_id,
+                    description:description
+                })
+                .done(function (data) {
+                    swal("Guardado","","success");
+                    setTimeout("location.href = '/roles'",0);
+                })
+                .fail(function () {
+                    swal("Error", "No se pudo conectar con el servidor", "error");
+                });
     }
 
     function actualizarRol(){
@@ -115,17 +101,19 @@
             return swal("Error", "Esto no deberia pasar", "error");
 
         $.post('{!! url('/roles/actualizarRol') !!}', {
-            _token: $('meta[name=csrf-token]').attr('content'),
-            id: id,
-            name: name,
-            display_name: display_name,
-            permisos_id: permisos_id,
-            description:description
-        }).done(function (data) {
-            swal("Actualizado","","success");
-            setTimeout("location.href = '/dr_basico/roles'",0);
-        }).fail(function () {
-            swal("Error", "No se pudo conectar con el servidor", "error");
-        });
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    id: id,
+                    name: name,
+                    display_name: display_name,
+                    permisos_id: permisos_id,
+                    description:description
+                })
+                .done(function (data) {
+                    swal("Actualizado","","success");
+                    setTimeout("location.href = '/roles'",0);
+                })
+                .fail(function () {
+                    swal("Error", "No se pudo conectar con el servidor", "error");
+                });
     }
 </script>

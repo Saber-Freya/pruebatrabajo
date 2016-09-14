@@ -8,46 +8,51 @@
 <fieldset class="row">
     <div class="form-group col-sm-6 col-lg-4">
         <i style="color: #DE6868" class="fa fa-asterisk"></i>{!! Form::label('nombre', 'Nombre:') !!}
-        {!! Form::text('nombre', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('nombre', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
         <i style="color: #DE6868" class="fa fa-asterisk"></i>{!! Form::label('apellido', 'Apellido:') !!}
-        {!! Form::text('apellido', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('apellido', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('calleA', 'Calle:') !!}
-        {!! Form::text('calleA', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('calleA', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('no_extA', 'No. Exterior:') !!}
-        {!! Form::text('no_extA', null, ['class' => 'form-control', 'maxlength' => 10]) !!}
+        {!! Form::text('no_extA', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('no_intA', 'No. Interior:') !!}
-        {!! Form::text('no_intA', null, ['class' => 'form-control', 'maxlength' => 10]) !!}
+        {!! Form::text('no_intA', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('coloniaA', 'Colonia:') !!}
-        {!! Form::text('coloniaA', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('coloniaA', null, ['class' => 'form-control']) !!}
     </div>
+
+    {{--<div class="form-group col-sm-6 col-lg-4">
+        {!! Form::label('domicilio', 'Dirección:') !!}
+        {!! Form::text('domicilio', null, ['class' => 'form-control']) !!}
+    </div>--}}
 
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('telefono', 'Teléfono:') !!}
-        {!! Form::text('telefono', null, ['class' => 'form-control inputTelefono required', 'maxlength' => 10]) !!}
+        {!! Form::text('telefono', null, ['class' => 'form-control']) !!}
     </div>
 
 </fieldset>
 
-<div class="grupo col-xs-12 pad0">
-    <div class="col-xs-12 titulo page-header-sub">Correos</div>
+<h4>Correos:</h4>
+<fieldset class="row">
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('email', 'Correo:') !!}
-        {!! Form::text('email', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('email', null, ['class' => 'form-control']) !!}
         {!! Form::hidden('cantidad_i', null, ['class' => 'form-control', 'value' => '1']) !!}
     </div>
 
@@ -69,11 +74,13 @@
             <tbody></tbody>
         </table>
     </div>
-</div>
+</fieldset>
 
 <div class="form-group col-sm-12">
-    {!! Form::button('Guardar <i class = "glyphicon glyphicon-floppy-save"></i>', ['class' => 'btn btn-success guardar',
-    'type'=>'submit']) !!}
+     {!! Form::button('Guardar <i class = "glyphicon glyphicon-floppy-save"></i>', ['class' => 'btn btn-success guardar',
+        'type'=>'submit']) !!}
+    {{--{!! Form::button('Guardar  <i class = "glyphicon glyphicon-floppy-save"></i>', ['class' => 'btn btn-success guardar',
+            'onclick'=>'pulsar(this)']) !!}--}}
     <a class = "btn btn-danger" href = "{!! route('auxiliars.index') !!}">
         Cancelar
         <i class = "glyphicon glyphicon-floppy-remove"></i>

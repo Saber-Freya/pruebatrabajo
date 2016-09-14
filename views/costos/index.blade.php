@@ -9,7 +9,7 @@
 <div class="col-xs-12">Hay {{ sizeof($costos) }} Costos</div>
     <div class="row tabla table-responsive" style="margin-top: 25px">
         @if($costos->isEmpty())
-            <div class="text-center">No hay registros.</div>
+            <div class="well text-center">No hay registros.</div>
         @else
             <div class="table-responsive col-xs-12">
                 <table class="table">
@@ -34,7 +34,7 @@
                             <td>
                                 <a title="Editar" href="{!! route('costos.edit', [$costo->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>
                                 <a title="Borrar" href="#" data-slug="costos" data-id="{!! $costo->id !!}"
-                                   onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i>
+                                   onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </td>
                         </tr>
@@ -44,6 +44,6 @@
             </div>
         @endif
     </div>
-    {!!  str_replace('/costos', '/dr_basico/costos', $costos->render()) !!}
+    <?php echo $costos->render(); ?>
 </div>
 @endsection

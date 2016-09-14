@@ -14,7 +14,7 @@
 
 <div class="form-group col-sm-6 col-lg-4">
     {!! Form::label('titulo', 'Titulo: ') !!}<i class="fa fa-info-circle" title="Nombre o titulo de la Consulta o Cirugía."></i>
-    {!! Form::text('titulo', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+    {!! Form::text('titulo', null, ['class' => 'form-control']) !!}
 </div>
 
 <!--- Costo Field --->
@@ -29,19 +29,14 @@
             prefix: '$ ',
             centsSeparator: '.',
             thousandsSeparator: ',',
-            allowNegative: false
-        });
+            allowNegative: 'true'
+        })
         var precio = $('#costo2').unmask();
         precio = precio / 100;
         $('#costo').val(precio);
         return;
     }
 </script>
-
-<div class="form-group col-sm-6 col-lg-4">
-    {!! Form::label('descripcion', 'Descripción: ') !!}
-    {!! Form::textarea('descripcion', null, ['class' => 'form-control', 'rows' => '4']) !!}
-</div>
 
 <!--- Submit Field --->
 <div class="form-group col-sm-12">

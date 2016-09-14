@@ -5,47 +5,47 @@
     </div>
 </div>
 
-<fieldset class="row" id="datosCliente">
+<fieldset class="row">
     <!--- Nombre Field --->
     <div class="form-group col-sm-6 col-lg-4">
         <i class="fa fa-asterisk"></i>{!! Form::label('nombre', 'Nombre:') !!}
-       {!! Form::text('nombre', null, ['class' => 'form-control required', 'maxlength' => 60]) !!}
+        {!! Form::text('nombre', null, ['class' => 'form-control']) !!}
     </div>
 
     <!--- Apellido Field --->
     <div class="form-group col-sm-6 col-lg-4">
         <i class="fa fa-asterisk"></i>{!! Form::label('apellido', 'Apellidos:') !!}
-        {!! Form::text('apellido', null, ['class' => 'form-control required', 'maxlength' => 60]) !!}
+        {!! Form::text('apellido', null, ['class' => 'form-control']) !!}
     </div>
 
     <!--- Calle Field --->
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('calle', 'Calle:') !!}
-        {!! Form::text('calle', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('calle', null, ['class' => 'form-control']) !!}
     </div>
 
-    <!--- Num ext Field --->
-    <div class="form-group col-xs-6 col-sm-2 col-lg-2">
-        {!! Form::label('num_ext', 'Núm. Ext.:') !!}
-        {!! Form::text('num_ext', null, ['class' => 'form-control numero ', 'maxlength' => 10]) !!}
+    <!--- No Exterior Field --->
+    <div class="form-group col-sm-6 col-lg-2">
+        {!! Form::label('no_exterior', 'No. Exterior:') !!}
+        {!! Form::text('no_exterior', null, ['class' => 'form-control']) !!}
     </div>
 
-    <!---Num INt Field --->
-    <div class="form-group col-xs-6 col-sm-2 col-lg-2">
-        {!! Form::label('num_int', 'Núm. Int.:') !!}
-        {!! Form::text('num_int', null, ['class' => 'form-control', 'maxlength' => 10]) !!}
+    <!--- No Interior Field --->
+    <div class="form-group col-sm-6 col-lg-2">
+        {!! Form::label('no_interiior', 'No. Interior:') !!}
+        {!! Form::text('no_interiior', null, ['class' => 'form-control']) !!}
     </div>
 
     <!--- Colonia Field --->
     <div class="form-group col-sm-6 col-lg-4">
-        {!! Form::label('col', 'Colonia:') !!}
-        {!! Form::text('col', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::label('colonia', 'Colonia:') !!}
+        {!! Form::text('colonia', null, ['class' => 'form-control']) !!}
     </div>
 
     <!--- Tel Field --->
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('tel', 'Teléfono:') !!}
-        {!! Form::text('tel', null, ['class' => 'form-control inputTelefono required', 'maxlength' => 10]) !!}
+        {!! Form::text('tel', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-lg-4">
@@ -82,10 +82,10 @@
         </div>
     </div>
 
-    <div class="form-group col-sm-6 col-lg-4">
-        {!! Form::label('etnicidad', 'Etnicidad:') !!}
-        {!! Form::text('etnicidad', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
-    </div>
+    {{--<div class="form-group col-sm-6 col-lg-4">
+    {!! Form::label('foto', 'Foto:') !!}
+    {!! Form::file('foto', null, ['class' => 'form-control']) !!}
+    </div>--}}
 
     <!--- Foto Field --->
     <div class="form-group col-sm-6 col-lg-4">
@@ -104,13 +104,21 @@
                         numFiles = input.get(0).files ? input.get(0).files.length : 1,
                         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
                 input.trigger('fileselect', [numFiles, label]);
+                /*console.log(input);*/
             });
 
             $(document).ready( function() {
                 $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+
                     var input = $(this).parents('.input-group').find(':text'),
                             log = numFiles > 1 ? numFiles + ' files selected' : label;
-                    if( input.length ) {input.val(log);}else {if( log ) alert(log);}
+
+                    if( input.length ) {
+                        input.val(log);
+                        /*console.log(input.val(log));*/
+                    }else {
+                        if( log ) alert(log);
+                    }
                 });
             });
         </script>
@@ -122,7 +130,7 @@
     <div class="col-xs-12 titulo page-header-sub">Correos</div>
     <div class="form-group col-sm-6 col-lg-4">
         {!! Form::label('email', 'Correo:') !!}
-        {!! Form::text('email', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+        {!! Form::text('email', null, ['class' => 'form-control']) !!}
         {!! Form::hidden('cantidad_i', null, ['class' => 'form-control', 'value' => '1']) !!}
     </div>
 
@@ -158,7 +166,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa asma_coment hidden">
         {!! Form::label('asma_coment', 'Comentario Asma Bronquial:') !!}<BR>
-        {!! Form::text('asma_coment', null, ['class' => 'form-control','id' => 'asma_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('asma_coment', null, ['class' => 'form-control','id' => 'asma_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -169,7 +177,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa ulsera_coment hidden">
         {!! Form::label('ulsera_coment', 'Comentario Ulcera:') !!}<BR>
-        {!! Form::text('ulsera_coment', null, ['class' => 'form-control','id' => 'ulsera_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('ulsera_coment', null, ['class' => 'form-control','id' => 'ulsera_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -180,7 +188,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa fiebre_coment hidden">
         {!! Form::label('fiebre_coment', 'Comentario Fiebre:') !!}<BR>
-        {!! Form::text('fiebre_coment', null, ['class' => 'form-control','id' => 'fiebre_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('fiebre_coment', null, ['class' => 'form-control','id' => 'fiebre_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -191,7 +199,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa diabetes_coment hidden">
         {!! Form::label('diabetes_coment', 'Comentario Diabetes:') !!}<BR>
-        {!! Form::text('diabetes_coment', null, ['class' => 'form-control','id' => 'diabetes_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('diabetes_coment', null, ['class' => 'form-control','id' => 'diabetes_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -202,7 +210,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa cardiacas_coment hidden">
         {!! Form::label('cardiacas_coment', 'Comentario Cardiacas:') !!}<BR>
-        {!! Form::text('cardiacas_coment', null, ['class' => 'form-control','id' => 'cardiacas_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('cardiacas_coment', null, ['class' => 'form-control','id' => 'cardiacas_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -213,7 +221,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa convulsiones_coment hidden">
         {!! Form::label('convulsiones_coment', 'Comentario Convulsiones:') !!}<BR>
-        {!! Form::text('convulsiones_coment', null, ['class' => 'form-control','id' => 'convulsiones_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('convulsiones_coment', null, ['class' => 'form-control','id' => 'convulsiones_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -224,7 +232,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa tuberculosis_coment hidden">
         {!! Form::label('tuberculosis_coment', 'Comentario Tuberculosis:') !!}<BR>
-        {!! Form::text('tuberculosis_coment', null, ['class' => 'form-control','id' => 'tuberculosis_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('tuberculosis_coment', null, ['class' => 'form-control','id' => 'tuberculosis_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -235,7 +243,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa mareos_coment hidden">
         {!! Form::label('mareos_coment', 'Comentario Vértigos:') !!}<BR>
-        {!! Form::text('mareos_coment', null, ['class' => 'form-control','id' => 'mareos_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('mareos_coment', null, ['class' => 'form-control','id' => 'mareos_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -246,7 +254,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa dolor_cabeza_coment hidden">
         {!! Form::label('dolor_cabeza_coment', 'Comentario Dolor de Cabeza:') !!}<BR>
-        {!! Form::text('dolor_cabeza_coment', null, ['class' => 'form-control','id' => 'dolor_cabeza_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('dolor_cabeza_coment', null, ['class' => 'form-control','id' => 'dolor_cabeza_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -257,7 +265,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa emocionales_coment hidden">
         {!! Form::label('emocionales_coment', 'Comentario Emocionales:') !!}<BR>
-        {!! Form::text('emocionales_coment', null, ['class' => 'form-control','id' => 'emocionales_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('emocionales_coment', null, ['class' => 'form-control','id' => 'emocionales_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -268,7 +276,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa hernias_coment hidden">
         {!! Form::label('hernias_coment', 'Comentario Hernias:') !!}<BR>
-        {!! Form::text('hernias_coment', null, ['class' => 'form-control','id' => 'hernias_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('hernias_coment', null, ['class' => 'form-control','id' => 'hernias_coment']) !!}
     </div>
 
     <div class="form-group col-sm-6 col-md-3" align="center">
@@ -279,7 +287,7 @@
 
     <div class="form-group col-sm-6 col-md-3 comentariosHa arterial_coment hidden">
         {!! Form::label('arterial_coment', 'Comentario Hipertensión:') !!}<BR>
-        {!! Form::text('arterial_coment', null, ['class' => 'form-control','id' => 'arterial_coment', 'maxlength' => 225]) !!}
+        {!! Form::text('arterial_coment', null, ['class' => 'form-control','id' => 'arterial_coment']) !!}
     </div>
 
 </div>
@@ -292,41 +300,29 @@
     </div>
     <div class="col-xs-12 pad0 row-eq-height">
         <div class="col-xs-12">
-            <div class="form-group col-sm-6 col-lg-4">
+            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
                 <i class="fa fa-asterisk"></i>{!! Form::label('nombre_con', 'Nombre:') !!}
-                {!! Form::text('nombre_con', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+                {!! Form::text('nombre_con', null, ['class' => 'form-control']) !!}
             </div>
-            <div class="form-group col-sm-6 col-lg-4">
-                {!! Form::label('parentesco_id', 'Parentesco:') !!}
-                {!! Form::select('parentesco_id', $listaParentescos, null, ['class' => 'form-control']) !!}
-            </div>
+            {{--<div class="form-group col-xs-12 col-sm-6 col-lg-4 hidden">
+                {!! Form::label('depa_con', 'Departamento:') !!}
+                {!! Form::text('depa_con', null, ['class' => 'form-control']) !!}
+            </div>--}}
+            {{--<div class="form-group col-xs-12 col-sm-6 col-lg-4 hidden">
+                {!! Form::label('tel_emp_con', 'Tel. Empresa:') !!}
+                <input type="tel" class="form-control" maxlength="10" id="tel_emp_con">
+            </div>--}}
             <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-                {!! Form::label('calleE', 'Calle:') !!}
-                {!! Form::text('calleE', null, ['class' => 'form-control required', 'maxlength' => 60]) !!}
-            </div>
-            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-                {!! Form::label('no_extE', 'Núm. Ext.:') !!}
-                {!! Form::text('no_extE', null, ['class' => 'form-control numero required', 'maxlength' => 10]) !!}
-            </div>
-            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-                {!! Form::label('no_intE', 'Núm. Int.:') !!}
-                {!! Form::text('no_intE', null, ['class' => 'form-control required', 'maxlength' => 10]) !!}
-            </div>
-            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-                {!! Form::label('coloniaE', 'Colonia:') !!}
-                {!! Form::text('coloniaE', null, ['class' => 'form-control required', 'maxlength' => 60]) !!}
-            </div>
-            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-                {!! Form::label('cpE', 'Código Postal:') !!}
-                {!! Form::text('cpE', null, ['class' => 'form-control inputTelefono required', 'maxlength' => 5]) !!}
-            </div>
-            <div class="form-group col-sm-6 col-lg-4">
                 {!! Form::label('tel_per_con', 'Teléfono:') !!}
-                <input type="tel" class="form-control inputTelefono" id="tel_per_con" maxlength="10">
+                <input type="tel" class="form-control" maxlength="10" id="tel_per_con">
             </div>
-            <div class="form-group col-sm-6 col-lg-4">
+            {{--<div class="form-group col-xs-12 col-sm-6 col-lg-4 hidden">
+                {!! Form::label('email_emp_con', 'Email Empresa:') !!}
+                <input type="email" class="form-control" id="email_emp_con">
+            </div>--}}
+            <div class="form-group col-xs-12 col-sm-6 col-lg-4">
                 {!! Form::label('email_per_con', 'Correo:') !!}
-                <input type="email" class="form-control" id="email_per_con" maxlength="60">
+                <input type="email" class="form-control" id="email_per_con">
             </div>
         </div>
     </div>
@@ -335,30 +331,24 @@
             Lista de Contactos
         </div>
         <div class="col-xs-12 pad0" style="font-weight: bold">
-            <div class="col-sm-2 hidden-xs">Contacto</div>
-            <div class="col-sm-1 hidden-xs">Parentesco</div>
-            <div class="col-sm-1 hidden-xs">Calle</div>
-            <div class="col-sm-1 hidden-xs">Núm. Ext.</div>
-            <div class="col-sm-1 hidden-xs">Núm. Int.</div>
-            <div class="col-sm-1 hidden-xs">Colonia</div>
-            <div class="col-sm-1 hidden-xs">Código Postal</div>
-            <div class="col-sm-1 hidden-xs">Teléfono</div>
-            <div class="col-sm-2 hidden-xs">Correo</div>
-            <div class="col-sm-1 hidden-xs text-right">Acción</div>
+            <div class="col-sm-3 hidden-xs">Contacto</div>
+            {{--<div class="col-xs-2 hidden">Departamento</div>--}}
+            {{--<div class="col-xs-2 hidden">Tel. Empresa</div>--}}
+            <div class="col-sm-3 hidden-xs">Teléfono</div>
+            {{--<div class="col-xs-2 hidden">Email Empresa</div>--}}
+            <div class="col-sm-3 hidden-xs">Correo</div>
+            <div class="col-sm-3 hidden-xs text-right">Acción</div>
         </div>
         @if(isset($cliente))
             @foreach($cliente->contactos as $con)
                 <div class="contacto col-xs-12 pad0" style="border-top: solid darkgrey">
-                    <div class="col-xs-12 col-sm-2 contacto">{!! $con->nombre !!}</div>
-                    <div class="col-xs-12 col-sm-1 parentesco" id="{!! $con->parentesco_id !!}">{!! $con->parentesco !!}</div>
-                    <div class="col-xs-12 col-sm-1 calleE">{!! $con->calleE !!}</div>
-                    <div class="col-xs-12 col-sm-1 no_intE">{!! $con->no_intE !!}</div>
-                    <div class="col-xs-12 col-sm-1 no_extE">{!! $con->no_extE!!}</div>
-                    <div class="col-xs-12 col-sm-1 coloniaE">{!! $con->coloniaE !!}</div>
-                    <div class="col-xs-12 col-sm-1 cpE">{!! $con->cpE !!}</div>
-                    <div class="col-xs-12 col-sm-1 tel_per">{!! $con->telefono_personal !!}</div>
-                    <div class="col-xs-12 col-sm-2 email_per">{!! $con->email_personal !!}</div>
-                    <div class="col-xs-12 col-sm-1">
+                    {{--<div class="col-xs-2 departamento">{!! $con->departamento !!}</div>--}}
+                    <div class="col-xs-12 col-sm-3 contacto">{!! $con->nombre !!}</div>
+                    {{--<div class="col-xs-2 tel_emp">{!! $con->telefono_empresa !!}</div>--}}
+                    <div class="col-xs-12 col-sm-3 tel_per">{!! $con->telefono_personal !!}</div>
+                    {{--<div class="col-xs-2 email_emp">{!! $con->email_empresa !!}</div>--}}
+                    <div class="col-xs-12 col-sm-3 email_per">{!! $con->email_personal !!}</div>
+                    <div class="col-xs-12 col-sm-3">
                         <div class='minus flotante' onclick='$(this).parent().parent().remove()'><i class='fa fa-times'></i></div>
                         <div class='edit flotante' onclick='editarContacto(this)'><i class='glyphicon glyphicon-edit'></i></div>
                     </div>
@@ -374,7 +364,7 @@
 </div>
 
 <div class="col-xs-12 pad0 grupo margintop20 invisible" id="seccion-factura">
-    <div class="col-sm-6 col-xs-12 titulo margintop10">Datos Facturación <span class="red"></span></div>
+    <div class="col-sm-6 col-xs-12 titulo margintop10">Datos Facturación <span class="red">(Todos los datos son obligatorios)</span></div>
     <div class="pregunta col-sm-4 pull-right" align="right">
         &iquest;Usar datos del paciente?
         <i id="check-factura" class="fa fa-square-o" onclick="mismosDatos(this)" style="cursor: pointer"></i>
@@ -382,15 +372,11 @@
     <div class="datos-facturacion col-xs-12 pad0">
         <div class="form-group col-sm-6 col-lg-4">
             <i class="fa fa-asterisk"></i>{!! Form::label('nom_comercial', 'Nombre Comercial:') !!}
-            {!! Form::text('nom_comercial', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+            {!! Form::text('nom_comercial', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
             <i class="fa fa-asterisk"></i>{!! Form::label('razon_social', 'Razón Social:') !!}
-            {!! Form::text('razon_social', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
-        </div>
-        <div class="form-group col-sm-6 col-lg-4">
-            {!! Form::label('aseguradora', 'Aseguradora:') !!}
-            {!! Form::text('aseguradora', null, ['class' => 'form-control', 'maxlength'=> 60]) !!}
+            {!! Form::text('razon_social', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
             <i class="fa fa-asterisk"></i>{!! Form::label('rfc', 'RFC:') !!}
@@ -398,44 +384,35 @@
         </div>
         <div class="form-group col-sm-6 col-lg-4">
             <i class="fa fa-asterisk"></i>{!! Form::label('metodo_pago', 'Forma de pago:') !!}
-            <select id="metodo_pago" name="metodo_pago" class="form-control">
-            @foreach($formaPago as $pago)
-                <option value="{!! $pago->id !!}">{!! $pago->codigo !!} | {!! $pago->nombre !!}</option>
-            @endforeach
-            </select>
+            {!! Form::text('metodo_pago', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('numCuenta', 'Número de Cuenta:') !!}
-            {!! Form::text('numCuenta', null, ['class' => 'form-control numero', 'maxlength'=>18, 'minlength'=>4]) !!}
-        </div>
-        <div class="form-group col-xs-12 col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('emailF', 'Email:') !!}
-            {!! Form::text('emailF', null, ['class' => 'form-control','maxlength' => 60]) !!}
+            {!! Form::label('num_cuenta', 'Número de Cuenta:') !!}
+            {!! Form::text('num_cuenta', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('calleF', 'Calle:') !!}
-            {!! Form::text('calleF', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+            <i class="fa fa-asterisk"></i>{!! Form::label('calle_pub', 'Calle:') !!}
+            {!! Form::text('calle_pub', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('colF', 'Colonia:') !!}
-            {!! Form::text('colF', null, ['class' => 'form-control', 'maxlength' => 60]) !!}
+            <i class="fa fa-asterisk"></i>{!! Form::label('num_ext', 'No. Exterior:') !!}
+            {!! Form::text('num_ext', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('num_extF', 'Núm. Ext.:') !!}
-            {!! Form::text('num_extF', null, ['class' => 'form-control', 'maxlength' => 10]) !!}
+            {!! Form::label('num_int', 'No. Interior:') !!}
+            {!! Form::text('num_int', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            {!! Form::label('num_intF', 'Núm. Int.:') !!}
-            {!! Form::text('num_intF', null, ['class' => 'form-control', 'maxlength' => 10]) !!}
+            <i class="fa fa-asterisk"></i>{!! Form::label('col', 'Colonia:') !!}
+            {!! Form::text('col', null, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('cpF', 'Código Postal:') !!}
-            {!! Form::text('cpF', null, ['class' => 'form-control inputTelefono required','maxlength'=>5]) !!}
+            <i class="fa fa-asterisk"></i>{!! Form::label('pais', 'País:') !!}
+            {!! Form::text('pais', null, ['class' => 'form-control']) !!}
         </div>
-
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('edoF', 'Estado:') !!}
-            <select id="edoF" class="form-control">
+            <i class="fa fa-asterisk"></i>{!! Form::label('edo', 'Estado:') !!}
+            <select id="edo" class="form-control">
                 <option value="0">Selecciona Estado</option>
                 @foreach($estados as $edo)
                     <option value="{!! $edo->id !!}">{!! $edo->title !!}</option>
@@ -443,26 +420,45 @@
             </select>
         </div>
         <div class="form-group col-sm-6 col-lg-4">
-            <i class="fa fa-asterisk"></i>{!! Form::label('cdF', 'Ciudad:') !!}
-            <select name="cdF" id="cdF" class="form-control" readonly="">
+            <i class="fa fa-asterisk"></i>{!! Form::label('cd', 'Ciudad:') !!}
+            <select name="cd" id="cd" class="form-control" readonly="">
             </select>
         </div>
+        <div class="form-group col-sm-6 col-lg-4">
+            <i class="fa fa-asterisk"></i>{!! Form::label('cp', 'Código Postal:') !!}
+            {!! Form::text('cp', null, ['class' => 'form-control']) !!}
+        </div>
 
+        <div class="form-group col-sm-6 col-lg-4">
+            <i class="fa fa-asterisk"></i>{!! Form::label('localidad', 'Localidad:') !!}
+            {!! Form::text('localidad', null, ['class' => 'form-control']) !!}
+        </div>
     </div>
 </div>
 
 <!--- Submit Field --->
 <fileset class="form-group col-sm-12">
     <a onclick="Guardar(this)" class="btn btn-success guardar">
-        Guardar <i class = "glyphicon glyphicon-floppy-save"></i>
+        Guardar
+        <i class = "glyphicon glyphicon-floppy-save"></i>
     </a>
     <a class = "btn btn-danger cancelar" href = "{!! route('clientes.index') !!}">
-        Cancelar <i class = "glyphicon glyphicon-floppy-remove"></i>
+        Cancelar
+        <i class = "glyphicon glyphicon-floppy-remove"></i>
     </a>
-    {{--{!! Form::reset('Limpiar Formulario', ['class' => 'btn btn-default pull-right limpiar']) !!}--}}
+    {!! Form::reset('Limpiar Formulario', ['class' => 'btn btn-default pull-right limpiar']) !!}
 </fileset>
+{{--<div class="form-group col-sm-12">
+     {!! Form::button('Guardar <i class = "glyphicon glyphicon-floppy-save"></i>', ['class' => 'btn btn-success',
+        'type'=>'submit']) !!}
+        <a class = "btn btn-danger" href = "{!! route('clientes.index') !!}">
+            Cancelar
+            <i class = "glyphicon glyphicon-floppy-remove"></i>
+        </a>
+</div>--}}
 
 <script>
+
     var clientes = null;
     @if(isset($cliente))
          clientes = {!!$cliente!!};
@@ -542,23 +538,6 @@
                 $('#globo_arterial_coment').removeClass('fa-comment-o').addClass('fa-comment').css("color", "#337AB7");
             }
 
-            if(clientes.factura == 'true'){$("#check-factura").trigger("click");}else{$("#seccion-factura").addClass('invisible');}
-            if(clientes.facturacion !== null){
-                var facturacion = clientes.facturacion;
-                $("#nom_comercial").val(facturacion.nom_comercial);
-                $("#razon_social").val(facturacion.razon_social);
-                $("#aseguradora").val(facturacion.aseguradora);
-                $("#rfc").val(facturacion.rfc);
-                $("#metodo_pago").val(facturacion.metodoPago);
-                $("#numCuenta").val(facturacion.numCuenta);
-                $("#emailF").val(facturacion.email);
-                $("#calleF").val(facturacion.calle);
-                $("#colF").val(facturacion.col);
-                $("#num_extF").val(facturacion.num_ext);
-                $("#num_intF").val(facturacion.num_int);
-                $("#cpF").val(facturacion.cp);
-                $("#edoF").val(facturacion.edo).trigger("change");
-            }
 
         }
     });
@@ -590,15 +569,11 @@
     });
 
     $("#agregar_contacto").on("click", function () {
+        /*var departamento = $("#depa_con").val().trim();*/
         var contacto = $("#nombre_con").val().trim();
-        var parentesco_id = $("#parentesco_id option:selected").val();
-        var parentesco_nombre = $("#parentesco_id option:selected").text();
-        var calleE = $("#calleE").val().trim();
-        var no_extE = $("#no_extE").val().trim();
-        var no_intE = $("#no_intE").val().trim();
-        var coloniaE = $("#coloniaE").val().trim();
-        var cpE = $("#cpE").val().trim();
+        /*var tel_emp = $("#tel_emp_con").val().trim();*/
         var tel_per = $("#tel_per_con").val().trim();
+        /*var email_emp = $("#email_emp_con").val().trim();*/
         var email_per = $("#email_per_con").val().trim();
 
         if(!validarNoVacio(contacto)) return swal("Espere", "Es necesario agregar el nombre de contacto", "info");
@@ -609,46 +584,36 @@
         if(email_per != "" && !validarEmail(email_per)) return swal("Espere", "El correo debe de ser un correo valido. Ejemplo: correo@ejemplo.com", "info");
 
         var res = "<div class='contacto col-xs-12 pad0' style='border-top: solid darkgrey'>";
-            res += "<div class='col-xs-12 col-sm-2 contacto'>"+contacto+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 parentesco' id="+parentesco_id+">"+parentesco_nombre+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 calleE'>"+calleE+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 no_extE'>"+no_extE+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 no_intE'>"+no_intE+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 coloniaE'>"+coloniaE+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 cpE'>"+cpE+"</div>";
-            res += "<div class='col-xs-12 col-sm-1 tel_per'>"+tel_per+"</div>";
-            res += "<div class='col-xs-12 col-sm-2 email_per'>"+email_per+"</div>";
-            res += "<div class='col-xs-12 col-sm-1'>";
-            res += "<div class='minus flotante' onclick='$(this).parent().parent().remove()'><i class='fa fa-times'></i></div>";
-            res += "<div class='edit flotante' onclick='editarContacto(this)'><i class='glyphicon glyphicon-edit'></i></div></div>";
+        res += "<div class='col-xs-12 col-sm-3 contacto'>"+contacto+"</div>";
+        /*res += "<div class='col-xs-2 departamento'>"+departamento+"</div>";*/
+        /*res += "<div class='col-xs-2 tel_emp'>"+tel_emp+"</div>";*/
+        res += "<div class='col-xs-12 col-sm-3 tel_per'>"+tel_per+"</div>";
+        /*res += "<div class='col-xs-2 email_emp'>"+email_emp+"</div>";*/
+        res += "<div class='col-xs-12 col-sm-3 email_per'>"+email_per+"</div>";
+        res += "<div class='col-xs-12 col-sm-3'>";
+        res += "<div class='minus flotante' onclick='$(this).parent().parent().remove()'><i class='fa fa-times'></i></div>";
+        res += "<div class='edit flotante' onclick='editarContacto(this)'><i class='glyphicon glyphicon-edit'></i></div></div>";
         res += "</div>";
 
-        $("#seccion_contactos").append(res).removeClass('invisible');
-        /*$("#seccion_contactos").removeClass('invisible');*/
+        $("#seccion_contactos").append(res);
+        $("#seccion_contactos").removeClass('invisible');
 
         limpiarContacto();
     });
 
     function editarContacto(x){
+        /*var departamento = $(x).siblings('.departamento').html().trim();*/
         var contacto = $(x).parent().siblings('.contacto').html().trim();
-        /*var parentesco_nombre = $(x).parent().siblings('.parentesco').html().trim();*/
-        var parentesco_id = $(x).parent().siblings('.parentesco').attr('id');
-        var calleE = $(x).parent().siblings('.calleE').html().trim();
-        var no_extE = $(x).parent().siblings('.no_extE').html().trim();
-        var no_intE = $(x).parent().siblings('.no_intE').html().trim();
-        var coloniaE = $(x).parent().siblings('.coloniaE').html().trim();
-        var cpE = $(x).parent().siblings('.cpE').html().trim();
+        /*var tel_emp = $(x).siblings('.tel_emp').html().trim();*/
         var tel_per = $(x).parent().siblings('.tel_per').html().trim();
+        /*var email_emp = $(x).siblings('.email_emp').html().trim();*/
         var email_per = $(x).parent().siblings('.email_per').html().trim();
 
+        /*$("#depa_con").val(departamento);*/
         $("#nombre_con").val(contacto);
-        $("#parentesco_id").val(parentesco_id);
-        $("#calleE").val(calleE);
-        $("#no_extE").val(no_extE);
-        $("#no_intE").val(no_intE);
-        $("#coloniaE").val(coloniaE);
-        $("#cpE").val(cpE);
+        /*$("#tel_emp_con").val(tel_emp);*/
         $("#tel_per_con").val(tel_per);
+        /*$("#email_emp_con").val(email_emp);*/
         $("#email_per_con").val(email_per);
 
         $(x).parent().parent().remove();
@@ -656,13 +621,10 @@
 
     function limpiarContacto() {
         $("#nombre_con").val("");
-        $("#parentesco_id").val(2);
-        $("#calleE").val("");
-        $("#no_extE").val("");
-        $("#no_intE").val("");
-        $("#coloniaE").val("");
-        $("#cpE").val("");
+        $("#depa_con").val("");
+        $("#tel_emp_con").val("");
         $("#tel_per_con").val("");
+        $("#email_emp_con").val("");
         $("#email_per_con").val("");
     }
 
@@ -680,34 +642,32 @@
     }
 
     function mismosDatos(x){
-            //Si esta activado, desactivalo!
-            if($(x).hasClass('fa-check-square-o')){
-                $(x).removeClass("fa-check-square-o active").addClass("fa-square-o active");
-                $("#seccion-factura input").each(function(){
-                    $(this).val("");
-                });
-                $("#seccion-factura select").each(function(){
-                    $(this).val(0);
-                });
-                $("#seccion-factura input:first").focus();
-            }
-            //Si esta desactivado, activalo!
-            else{
-                $(x).removeClass("fa-square-o").addClass("fa-check-square-o active");
-                $("#datosCliente input").each(function(){
-                    var id = $(this).attr("id");
-                    var valor = $(this).val();
-                    $("#"+id+"F").val(valor);
+        //Si esta activado, desactivalo!
+        if($(x).hasClass('fa-check-square-o')){
+            $(x).removeClass("fa-check-square-o active").addClass("fa-square-o active");
+            $("#nom_comercial").val("");
+            $("#razon_social").val("");
+            $("#calle_pub").val("");
+            $("#num_ext").val("");
+            $("#num_int").val("");
+            $("#col").val("");
+        } else{//Si esta desactivado, activalo!
+            $(x).removeClass("fa-square-o").addClass("fa-check-square-o active");
 
-                });
-                $("#datosCliente select").each(function(){
-                    var id = $(this).attr("id");
-                    var valor = $(this).val();
-                    $("#"+id+"F").val(valor).trigger("change");
+            var nombre = $("#nombre").val().trim();
+            var apellido = $("#apellido").val().trim();
+            var calle_pub = $("#calle").val().trim();
+            var num_ext_pub = $("#no_exterior").val().trim();
+            var num_int_pub = $("#no_interiior").val().trim();
+            var col_pub = $("#colonia").val().trim();
 
-                });
-                $("#seccion-factura input:first").focus();
-            }
+            $("#nom_comercial").val(nombre);
+            $("#razon_social").val(nombre+" "+apellido);
+            $("#calle_pub").val(calle_pub);
+            $("#num_ext").val(num_ext_pub);
+            $("#num_int").val(num_int_pub);
+            $("#col").val(col_pub);
         }
+    }
 
 </script>

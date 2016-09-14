@@ -4,11 +4,12 @@
     </div>
 </div>
 
+<!--- Display Name Field --->
 <div class="form-group col-sm-6 col-lg-4">
     {!! Form::label('display_name', 'Nombre del Perfil:') !!}
     {!! Form::text('display_name', null, ['class' => 'form-control']) !!}
 </div>
-
+<!--- Description Field --->
 <div class="form-group col-sm-6 col-lg-4">
     {!! Form::label('description', 'Descripción:') !!}
     {!! Form::text('description', null, ['class' => 'form-control']) !!}
@@ -21,7 +22,7 @@
             <li class="modi active" modulo="todos">Ver Todos los permisos</li>
             @foreach($modulos as $modulo)
                 <?php
-                $nuevo= explode(" ", $modulo->display_name);
+                $nuevo= explode(' ', $modulo->display_name);
                 unset($nuevo[0]);
                 $nuevo = implode(" ", $nuevo);
                 ?>
@@ -31,7 +32,6 @@
             @endforeach
         </ul>
     </div>
-
     <div class="col-sm-8 col-xs-12">
         <select id="select-permisos" multiple="multiple">
             @if(isset($todos))
@@ -44,12 +44,7 @@
                 }
                 ?>
                 @foreach($todos as $permiso)
-                    <option value="{!! $permiso->id !!}" modulo="{!! $permiso->modulo!!}" id_permiso="{!! $permiso->id !!}"
-                            @if(isset($permisos) && in_array($permiso->id, $per_asignados))
-                                selected
-                            @endif>
-                        {!! $permiso->display_name !!}
-                    </option>
+                    <option value="{!! $permiso->id !!}" modulo="{!! $permiso->modulo!!}" id_permiso="{!! $permiso->id !!}" @if(isset($permisos) && in_array($permiso->id, $per_asignados)) selected @endif>{!! $permiso->display_name !!}</option>
                 @endforeach
             @endif
         </select>

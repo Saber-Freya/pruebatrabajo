@@ -6,7 +6,7 @@
         <h2 class="pull-left">Auxiliares</h2>
         <a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('auxiliars.create') !!}">Agregar</a>
     </div>
-    <div class="col-xs-12">Hay {{ sizeof($auxiliars) }} Auxiliar(es) en esta página</div>
+    <div class="col-xs-12">Hay {{ sizeof($auxiliars) }} Auxiliar(es)</div>
 
     <div class="row">
 
@@ -17,7 +17,7 @@
         </div>
 
         @if($auxiliars->isEmpty())
-            <div class="text-center">No hay registros.</div>
+            <div class="well text-center">No hay registros.</div>
         @else
 
             <div class="table-responsive col-xs-12">
@@ -38,7 +38,7 @@
                             <td>{!! $auxiliar->telefono !!}</td>
                             <td>
                                 <a title="Editar" href="{!! route('auxiliars.edit', [$auxiliar->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a title="Borrar" href="#" data-slug="auxiliars" data-id="{!! $auxiliar->id !!}"  onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i></a>
+                                <a title="Borrar" href="#" data-slug="auxiliars" data-id="{!! $auxiliar->id !!}"  onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -47,9 +47,8 @@
             </div>
         @endif
     </div>
-    {!!  str_replace('/auxiliars', '/dr_basico/auxiliars', $auxiliars->render()) !!}
+    <?php echo $auxiliars->render(); ?>
 </div>
-
 <script>
     $("#document").ready(function(){
         $("#busquedaAuxiliar").on("keyup",function(e){
@@ -63,7 +62,8 @@
         $.post('auxiliars/buscarAuxiliar', {
             _token: $('meta[name=csrf-token]').attr('content'),
             busqueda: $("#busquedaAuxiliar").val()
-        }).done(function (data) {
+        })
+        .done(function (data) {
             if(!data){
                 alert("Error, No se pudo cargar la busqueda, intente nuevamente");
             }

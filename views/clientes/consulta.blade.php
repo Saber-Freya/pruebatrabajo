@@ -5,26 +5,20 @@
         <div class="row col-xs-12">
             <div class="form-group col-md-3">
                 {!! Form::label('padecimiento', 'Padecimiento Nuevo: ') !!}
-                <i class="fa fa-info-circle" title="Dejar vacío este campo si hay seguimiento al padecimiento. Nota: Si se rellena este campo, se sustituirá por el padecimiento que esté  seleccionado en el campo de 'Seguimiento de Padecimiento'"></i>
+                <i class="fa fa-info-circle" title="Dejar vacío este campo si hay seguimiento al padecimiento."></i>
                 {!! Form::text('padecimiento', null, ['class'=>'form-control']) !!}
             </div>
             <div class="form-group col-md-3 @if(!count($padecimientoSelect)) hidden @endif">
-                {!! Form::label('padecimientoSelect', 'Seguimiento de Padecimiento:') !!}
+                {!! Form::label('padecimientoSelect', 'Seguimiento de Padecimiento') !!}
                 {!! Form::select('padecimientoSelect', $padecimientoSelect, $padecimientoC->id_pade, ['class' => 'form-control']) !!}
             </div>
-            {{--<div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 {!! Form::label('diagnostico', 'Diagnostico:') !!}
                 @if(isset($consulta))
                     {!! Form::text('diagnostico', $consulta->diagnostico, ['class'=>'form-control']) !!}
                 @else
                     {!! Form::text('diagnostico', null, ['class'=>'form-control']) !!}
                 @endif
-            </div>--}}
-            <div class="form-group col-md-2" style="margin-top:25px">
-                <a type="button" class="btn btn-success guardarEstudio" id_cliente="{!! $cliente->id !!}"
-                   data-id="{!! $cliente->id_servicio !!}" data-toggle="modal" data-target="#modalEstudio">Agregar Estudio
-                    <i class = "glyphicon glyphicon-plus"></i>
-                </a>
             </div>
             <div class="form-group col-xs-12">
                 {!! Form::label('observaciones', 'Observaciones:') !!}
@@ -41,9 +35,9 @@
                    data-id="{!! $cliente->id_servicio !!}" onclick="return finalizarConsulta(this)">Finalizar
                     <i class = "fa fa-circle fa-fw"></i>
                 </a>
-                <a type="button" class="btn btn-success pull-right actualizarConsulta" style="margin-right: 5px;" id_cliente="{!! $cliente->id !!}"
-                   id_servicio="{!! $cliente->id_servicio !!}" id_preconsulta="{!! $preconsulta->id !!}"
-                   onclick="almacenarConsulta(this)">Actualizar
+                <a type="button" class="btn btn-success pull-right actualizarConsulta" style="margin-right: 5px;"
+                   id_cliente="{!! $cliente->id !!}" id_servicio="{!! $cliente->id_servicio !!}"
+                   id_preconsulta="{!! $preconsulta->id !!}" onclick="almacenarConsulta(this)">Actualizar
                     <i class = "glyphicon glyphicon-floppy-save"></i>
                 </a>
             @else
@@ -94,7 +88,6 @@
                     <div class="form-group col-md-6">
                         {!! Form::label('estatura', 'Estatura:') !!}
                         {!! Form::text('estatura', $preconsulta->estatura, ['id'=>'estatura','class'=>'form-control','placeholder'=>'Estatura']) !!}
-                        {!! Form::hidden('inicioConsulta', $preconsulta->inicioConsulta, ['id'=>'inicioConsulta']) !!}
                     </div>
                 </div>
             </div>
@@ -119,27 +112,14 @@
         </div>
     </div>
 </div>
-@include('modals.estudio')
 <script>
     function almacenarConsulta(este){
         var padecimiento = $('#padecimiento').val();
         var id_padecimiento = $('#padecimientoSelect').val();
 
-        var estudios = [];
-        var estudio = {};
-        $("#seccion-estudios tr").each(function(){
-            var control_id = $(this).attr("control_id");
-            if(control_id!="" && control_id!=undefined){
-                estudio = { control_id:control_id, };
-                estudios.push(estudio);
-            }
-        });
-
-        if (estudios == ''){estudios = 'vacio';}
-
         $.ajax({
             type: 'POST',
-            url: '/dr_basico/servicios/almacenar/consulta',
+            url: '/servicios/almacenar/consulta',
             data:{
                 _token: $('meta[name=csrf-token]').attr('content'),
                 //preconsulta
@@ -157,8 +137,6 @@
                 diagnostico : $('#diagnostico').val(),
                 observaciones : $('#observaciones').val(),
                 id_preconsulta: $(este).attr('id_preconsulta'),
-                //estudios,
-                estudios:estudios
             },
             success: function(data){
                 swal("Guardado","","success");
@@ -168,22 +146,16 @@
             }
         });
     }
-
     function finalizarConsulta(este) {
         var id_servicio = $(este).attr('data-id');
-        var inicioConsulta = $('#inicioConsulta').val();
-        var id_cliente = $(este).attr('id_cliente');
         $.ajax({
-            type: 'POST',
-            url: '/dr_basico/servicios/cambioEstado/'+id_servicio+'/3',
-            data:{
-                _token: $('meta[name=csrf-token]').attr('content'),
-                inicioConsulta:inicioConsulta,
-                id_cliente:id_cliente
-            },success: function () {
+            async: false,
+            type: 'GET',
+            url: '/servicios/cambioEstado/'+id_servicio+'/3',
+            success: function () {
                 swal("Finalizada","","success");
-                setTimeout("location.href = '/dr_basico'",0);
-            },error: function (ajaxContext) {
+                setTimeout("location.href = '/'",0);
+            }, error: function (ajaxContext) {
                 swal("Espere", "Algo salio mal, reintente de nuevo o comuníquese con su administrador", "warning");
             }
         });
@@ -200,12 +172,11 @@
         console.log(id_padecimiento);
         cargarPadecimientoA(id_cliente,id_padecimiento);
     }
-
     function cargarPadecimientoA(id_cliente,id_padecimiento){
         $('.id_padecimiento').html("");
         $.ajax({
             type: 'GET',
-            url: '/dr_basico/padecimientosCliente/'+id_cliente,
+            url: '/padecimientosCliente/'+id_cliente,
             success: function(data){
                 if (data == ''){
                     $('.clasePadecimiento').addClass('hidden');

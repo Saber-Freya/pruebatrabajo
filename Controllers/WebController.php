@@ -109,14 +109,14 @@ class WebController extends AppBaseController {
 
 		foreach($fechas as $fecha){
 
-			$existe = DB::table('inhabiles')
+			$existe = DB::table('disponibilidad')
 					/*->where('estatus',1)*/
 					->where('fecha',$fecha)->get();
 
 			dump($existe);
 			if ($existe == []){
 				/*dump("Guardar");*/
-				DB::table('inhabiles')
+				DB::table('disponibilidad')
 						->insert(['fecha'=>$fecha, 'estatus'=>'1', 'created_at'=>$hoy]);
 			}else{
 				/*dump("No guardar");*/
@@ -164,11 +164,11 @@ class WebController extends AppBaseController {
 		}
 	}
 
-	public function inhabiles(){
+	public function disponibles(){
 		$hoy = Carbon::now();
 		$hoy = $hoy->format('Y-m-d');
 
-		$fechas = DB::table('inhabiles')
+		$fechas = DB::table('disponibilidad')
 				->select('*')
 				->where('estatus', 1)
 				->where('fecha','>=', $hoy)
@@ -178,7 +178,7 @@ class WebController extends AppBaseController {
 	}
 
 	public function borrarFecha($fecha){
-		DB::table('inhabiles')
+		DB::table('disponibilidad')
 				->where('fecha',$fecha)
 				->delete();
 	}
@@ -186,8 +186,6 @@ class WebController extends AppBaseController {
 	public function guardarInfoConsulta(Request $request,$id_servicio){
 		$input = $request->all();
 
-		$date = Carbon::now();
-		$hora = $date->toTimeString();
 		DB::table('preconsultas')
 			->insert([
 				'id_servicio'=>$id_servicio,
@@ -198,34 +196,18 @@ class WebController extends AppBaseController {
 				'glucosa'=>$input['glucosa'],
 				'peso'=>$input['peso'],
 				'estatura'=>$input['estatura'],
-				'inicioConsulta'=>$hora,
 			]);
 
 		if($input['id_padecimiento'] != 0){
 				DB::table('servicios')->where('id', $id_servicio)
 						->update(['id_padecimiento'=>$input['id_padecimiento']]);
 		}
-	}
-
-	public function inicioCirugia(Request $request){
-		$input = $request->all();
-		$date = Carbon::now();
-		$hora = $date->toTimeString();
-
-		DB::table('servicios')
-				->where('id',$input['id_servicio'])
-				->where('id_cliente',$input['id_cliente'])
-				->update([
-					'estado'=>2,
-					'inicioHora'=>$hora,
-				]);
 
 	}
-
 	public function actualizarInfoConsulta(Request $request,$id){
 		$input = $request->all();
 
-		DB::table('padecimiento_control')
+		DB::table('padecimientos')
 				->where('id', $id)
 				->update(['nombre'=>$input['nombre'],'sintomas'=>$input['sintomas'],'descripcion'=>$input['descripcion']]);
 	}

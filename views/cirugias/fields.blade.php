@@ -1,10 +1,46 @@
-<div class="col-xs-12 panel panel-default" style="margin-top: 30px;padding-top: 15px;">
+<div class = "row">
+    <div class = "col-xs-6 col-md-3">
+        <h1 class = "page-header">Cirugía</h1>
+    </div>
+</div>
+<fieldset>
+    <div class = "col-xs-12 col-xs-offset-0 col-md-offset-3 col-md-6 margentop20">
+        <ul class = "list-group">
+            <li class = "list-group-item">
+                <i class = "fa fa-user"></i>
+                <strong> {!! $cita->paciente !!}</strong>
+                <span class="pull-right"> {!! $cita->hora !!} </span><strong class="pull-right" style="padding-right: 5px"> Hora </strong>
+            </li>
+            <li class = "list-group-item col-xs-6">
+                <strong>Cirugia a realizar: </strong>
+                <br/>
+                <span>{!! $cita->cirugia !!}</span>
+                <br/>
+            </li>
+            <li class = "list-group-item col-xs-6">
+                <strong>Fecha: </strong>
+                <br/>
+                <span>{!! $cita->fecha !!}</span>
+                <br/>
+            </li>
+        </ul>
+    </div>
+</fieldset>
 
+<fieldset class="row panel panel-default" style="margin-top: 50px">
+    <!--- Id Cita Field --->
+    {{--<div class="form-group col-sm-6 col-lg-4">
+        {!! Form::label('id_cita', 'Id Cita:') !!}--}}
+        {!! Form::hidden('id_servicio', $cita->id, ['id' => 'id_servicio','class' => 'form-control']) !!}
+    {{--</div>--}}
+
+    <!--- Convenio Field --->
     <div class="form-group col-sm-6 col-lg-2">
         {!! Form::label('convenio', 'Convenio:') !!}
         {!! Form::text('convenio', null, ['class' => 'form-control']) !!}
     </div>
 
+    <!--- Renta Field --->
     <div class="form-group col-sm-6 col-lg-2">
         {!! Form::label('renta2', 'Renta con IVA:') !!}
         {!! Form::text('renta2', null, ['class' => 'form-control', 'placeholder'=>'$', 'onkeyup' => 'servicio(this.form)']) !!}
@@ -25,36 +61,48 @@
         }
     </script>
 
+    <!--- Recibo Field --->
     <div class="form-group col-sm-6 col-lg-2">
         {!! Form::label('recibo', 'Recibo:') !!}
         {!! Form::text('recibo', null, ['class' => 'form-control']) !!}
     </div>
 
+    <!--- Laser Field --->
     <div class="form-group col-sm-6 col-lg-2">
-        {!! Form::label('plaza', 'Plaza:') !!}<i class=" info fa fa-info-circle" title="Indicar el lugar de la Cirugía."></i>
-        {!! Form::text('plaza', null, ['class' => 'form-control']) !!}
+        {!! Form::label('laser', 'Laser:') !!}
+        {!! Form::text('laser', null, ['class' => 'form-control']) !!}
     </div>
 
+    <!--- Cryo Field --->
     <div class="form-group col-sm-6 col-lg-2" align="center">
-        {!! Form::label('status', 'Estatus de pago:') !!}<BR>
-        <input id="status" type="checkbox" data-off-text="No Pagado" data-on-text="Pagado" checked="false" class="form-control switch">
+        {!! Form::label('cryo', 'CRYOABLACION:') !!}<BR>
+        {{--{!! Form::checkbox('cryo', null, ['class' => 'form-control','data-on-text' => 'CRYOABLACION']) !!}--}}
+        <input id="cryo" type="checkbox" data-off-text="NO" data-on-text="SI" checked="false" class="form-control switch">
     </div>
 
+    <!--- Fecha Cryo Field --->
     <div class="form-group col-sm-6 col-lg-2 fecha_cryo">
-        {!! Form::label('fecha_pago', 'Fecha de Pago:') !!}<i class=" info fa fa-info-circle" title="Capture la fecha en la que se realice el pago."></i>
+        {!! Form::label('fecha_cryo', 'Fecha Cryo:') !!}
         <div class = "input-group" id="contenido">
-            {!! Form::text('fecha_pago', null, ['class' => 'form-control input-fecha']) !!}
+            {!! Form::text('fecha_cryo', null, ['class' => 'form-control input-fecha']) !!}
             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
         </div>
     </div>
 
-    <div class="form-group col-xs-12">
-        {!! Form::label('comentarios', 'Comentarios:') !!}
-        {!! Form::textarea('comentarios', null, ['class' => 'form-control','rows' => '4']) !!}
-    </div>
-</div>
+    <!--- Pago Field --->
+    {{--<div class="form-group col-sm-6 col-lg-4">
+        {!! Form::label('pago', 'Pago:') !!}
+        {!! Form::text('pago', null, ['class' => 'form-control']) !!}
+    </div>--}}
 
-<div class="col-xs-12" style="margin-top: 50px;">
+    <!--- Id Auxiliar Field --->
+    {{--<div class="form-group col-sm-6 col-lg-4">
+        {!! Form::label('id_auxiliar', 'Id Auxiliar:') !!}
+        {!! Form::text('id_auxiliar', null, ['class' => 'form-control']) !!}
+    </div>--}}
+</fieldset>
+
+<fieldset class="row" style="margin-top: 50px;">
     <div class="col-sm-5" style="border-right-style: inset;">
         <div class="invisible">
             {!! Form::label('select-auxiliar', 'Seleccionar Auxiliar:') !!}
@@ -130,6 +178,10 @@
                    data-on-text="SI" {{--data-on-color="success"--}} data-off-text="NO" {{--data-off-color="info"--}}
                    onchange="calcularTotal()"
             >
+            {{--<input class="switch divisaValor" id="divisaValor" type="checkbox" data-label-text="DIVISA"
+                   data-on-text="DLLS" data-on-color="success" data-off-text="MXN" data-off-color="info"
+                   onchange="cambiarDivisa()"
+            >--}}
         </div>
 
         <div class="col-sm-12 materiales-header table-responsive" style="margin-top: 10px">
@@ -175,5 +227,16 @@
             </div>
         </div>
     </div>
+</fieldset>
+
+<!--- Submit Field --->
+<div class="form-group col-sm-12" style="margin-top: 10px">
+     {!! Form::button('Guardar <i class = "glyphicon glyphicon-floppy-save"></i>', ['class' => 'btn btn-success',
+        'onclick'=>'guardarCirugia()']) !!}
+        <a class = "btn btn-danger" href = "{{ url('/') }}">
+            Cancelar
+            <i class = "glyphicon glyphicon-floppy-remove"></i>
+        </a>
 </div>
+
 @include('cirugias.script')

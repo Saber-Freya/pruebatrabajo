@@ -16,6 +16,7 @@ class RolesController extends AppBaseController {
     public function __construct(RoleRepository $rolesRepo){
         $this->rolesRepository = $rolesRepo;
         $this->middleware('auth');
+
         $this->beforeFilter('ver_roles', array('only' => 'index') );
         $this->beforeFilter('crear_roles', array('only' => 'create') );
         $this->beforeFilter('crear_roles', array('only' => 'store') );
@@ -26,24 +27,44 @@ class RolesController extends AppBaseController {
 
     public function index(){
 
-        /*$roles = Role::all();*/
-        $roles = Role::paginate(15);
+        $roles = Role::all();
         $permisos = Permission::all();
+
+        $modulos = DB::table('modulos')
+            ->select('*')
+            ->get();
 
         return view('roles.index')
         ->with('roles',$roles)
+        ->with('modulos',$modulos)
         ->with('permisos',$permisos);
     }
 
     public function create(){
         $permisos = DB::table('permissions')
             ->select('modulo', 'id', 'display_name', 'name')
+            /*->orderBy(DB::raw('FIELD(modulo,
+				"Clientes",
+				"Cotizaciones",
+				"Eventos",
+				"Servicios",
+				"Usuarios",
+				"Roles"
+				)'))*/
             ->orderBy('display_name', 'asc')
             ->get();
 
         $modulos = DB::table('permissions')
             ->select('modulo', 'id', 'display_name')
             ->groupBy('modulo')
+            /*->orderBy(DB::raw('FIELD(modulo,
+				"Clientes",
+				"Cotizaciones",
+				"Eventos",
+				"Servicios",
+				"Usuarios",
+				"Roles"
+				)'))*/
             ->get();
 
         return view('roles.create')
@@ -130,21 +151,17 @@ class RolesController extends AppBaseController {
 
     public function destroy($id){
         $roles = $this->rolesRepository->findRolesById($id);
-        $usuarioAsignado = $this->rolesRepository->usuarioAsignado($id);
 
         if(empty($roles)){
-            Flash::error('No se encontro.');
+            Flash::error('rol no encontrado');
             return redirect(route('roles.index'));
         }
 
-        if($usuarioAsignado == null){
-            $roles->delete();
-            Flash::message('Borrado.');
-            return redirect(route('roles.index'));
-        }else{
-            return $mensaje = 'error';
-        }
+        $roles->delete();
 
+        Flash::message('Eliminado.');
+
+        return redirect(route('roles.index'));
     }
 
     function agregarRol(Request $request){

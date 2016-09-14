@@ -18,6 +18,13 @@ class AuxiliarController extends Controller {
 	function __construct(AuxiliarRepository $auxiliarRepo){
 		$this->auxiliarRepository = $auxiliarRepo;
 		$this->middleware('auth');
+
+		/*$this->beforeFilter('ver_pacientes', array('only' => 'index') );
+		$this->beforeFilter('crear_pacientes', array('only' => 'create') );
+		$this->beforeFilter('crear_pacientes', array('only' => 'store') );
+		$this->beforeFilter('editar_pacientes', array('only' => 'edit') );
+		$this->beforeFilter('editar_pacientes', array('only' => 'update') );
+		$this->beforeFilter('eliminar_pacientes', array('only' => 'delete') );*/
 	}
 
 	public function index(Request $request){
@@ -50,7 +57,7 @@ class AuxiliarController extends Controller {
 		if (!empty($input["e"])) {
 			$this->auxiliarRepository->multiEmails($input["e"], $id_auxiliar);
 		}
-		Flash::message('Guardado.');
+		Flash::message('Guardado');
 		return redirect(route('auxiliars.index'));
 	}
 
@@ -67,8 +74,8 @@ class AuxiliarController extends Controller {
 		$auxiliar = $this->auxiliarRepository->findAuxiliarById($id);
 		$emails = $this->auxiliarRepository->buscarEmails($id);
 		if(empty($auxiliar)){
-			Flash::error('No se encontro.');
-			return redirect(route('auxiliars.index'));
+			Flash::error('No se encontro');
+			return redirect(route('auxiliares.index'));
 		}
 		return view('auxiliars.edit')
 				->with('auxiliar', $auxiliar)
@@ -94,7 +101,7 @@ class AuxiliarController extends Controller {
 		}
 		$auxiliar = $this->auxiliarRepository->findAuxiliarById($id);
 		if(empty($auxiliar)){
-			Flash::error('No se encontro.');
+			Flash::error('No se encontro');
 			return redirect(route('auxiliars.index'));
 		}
 		$auxiliar = $this->auxiliarRepository->update($auxiliar, $input);
@@ -105,8 +112,9 @@ class AuxiliarController extends Controller {
 	public function destroy($id){
 		$auxiliar = Auxiliar::find($id);
 
-		if(empty($auxiliar)){
-			Flash::error('No se encontro.');
+		if(empty($auxiliar))
+		{
+			Flash::error('No se encontro');
 			return redirect(route('auxiliars.index'));
 		}
 

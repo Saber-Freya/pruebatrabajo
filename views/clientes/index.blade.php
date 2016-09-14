@@ -10,6 +10,7 @@
 	<div class="col-xs-12">Hay {{ sizeof($clientes) }} Pacientes en esta página</div>
 
     <div class="row">
+
 		<div class="col-xs-12" align="right">
 			<i class="fa fa-info-circle" title="Dejar vacío para mostrar todos los registros"></i>
 			<input class="busqueda" id="busqueda" type="text" placeholder="Búsqueda">
@@ -17,30 +18,37 @@
 		</div>
 
 		@if($clientes->isEmpty())
-			<div class="text-center">No hay registros.</div>
+			<div class="well text-center">No hay registros.</div>
 		@else
 			<div class="table-responsive col-xs-12">
 				<table class="table">
 					<thead>
+						{{--<th>No. de Cliente</th>--}}
 						<th>Nombre</th>
+						{{--<th>Dirección</th>--}}
+						{{--<th>Rfc</th>--}}
 						<th>Teléfono</th>
-						<th>Estatus</th>
+						{{--<th>Descripcion</th>--}}
 						<th width="80px">Acción</th>
 					</thead>
 					<tbody>
 						@foreach($clientes as $cliente)
-							<?php
-								if($cliente->estatus_fin == 0){ $finalizado = 'ACTIVO'; }else{ $finalizado = 'FINALIZADO'; }
-							?>
 							<tr>
+								{{--<td>{!! $cliente->id !!}</td>--}}
 								<td>{!! $cliente->nombre !!} {!! $cliente->apellido !!}</td>
+								{{--<td>
+									{!! $cliente->calle !!}, {!! $cliente->no_exterior !!}, {!! $cliente->no_interiior !!},
+									{!! $cliente->colonia !!}, {!! $cliente->ciudad !!}, {!! $cliente->estado !!},
+									{!! $cliente->pais !!}, {!! $cliente->cp !!}.
+								</td>--}}
+								{{--<td>{!! $cliente->rfc !!}</td>--}}
 								<td>{!! $cliente->tel !!}</td>
-								<td>{!! $finalizado !!}</td>
 
 								<td width="80px">
 									@if(Entrust::can('editar_pacientes'))<a title="Editar" href="{!! route('clientes.edit', [$cliente->id]) !!}"><i class="glyphicon glyphicon-edit"></i></a>@endif
-									<a title="Historial del Paciente" href="clientes/historial/{!!$cliente->id!!}"><i class = "glyphicon glyphicon-paste"></i></a>
-									@if(Entrust::can('eliminar_pacientes'))<a title="Borrar" href="#" data-slug="clientes" data-id="{!! $cliente->id !!}" onclick="return borrarElemento(this)"><i class="fa fa-trash-o"></i></a>@endif
+									<a title="Informacion e Historial del Paciente" href="clientes/historial/{!!$cliente->id!!}"><i class = "fa fa-clipboard"></i></a>
+									{{--<a title="Historial" href = "#" data-id = "{!! $cliente->id !!}" onclick="historialCliente(this)"><i class = "fa fa-clipboard"></i></a>--}}
+									@if(Entrust::can('eliminar_pacientes'))<a title="Borrar" href="#" data-slug="clientes" data-id="{!! $cliente->id !!}" onclick="return borrarElemento(this)"><i class="glyphicon glyphicon-remove"></i></a>@endif
 								</td>
 							</tr>
 						@endforeach
@@ -49,10 +57,8 @@
 			</div>
         @endif
     </div>
-
-		{{--{!!  str_replace('/clientes', '/dr_basico/clientes', $clientes->appends($q)->render()) !!}--}}
-		{!!  str_replace('/clientes', '/dr_basico/clientes', $clientes->render()) !!}
-
+    <?php echo $clientes->render(); ?>
+	{{--<a class="btn btn-warning pull-right"href="#" data-toggle="modal" data-target="#myCliente">Generar Excel</a>--}}
 </div>
 <script>
 	$("#document").ready(function(){
@@ -64,6 +70,7 @@
 	});
 
 	function buscarCliente(){
+
 		$.post('clientes/buscarCliente', {
 			_token: $('meta[name=csrf-token]').attr('content'),
 			busqueda: $("#busqueda").val()

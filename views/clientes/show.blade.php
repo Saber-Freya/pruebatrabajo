@@ -1,76 +1,50 @@
 @extends('app')@section('content')
-<?php
-$user_agent = $_SERVER['HTTP_USER_AGENT'];
-function getBrowser($user_agent){
-    if(strpos($user_agent, 'MSIE') !== FALSE)
-        return 'Internet explorer';
-    elseif(strpos($user_agent, 'Trident') !== FALSE) //IE 11
-        return 'Internet explorer';
-    elseif(strpos($user_agent, 'Firefox') !== FALSE)
-        return 'Mozilla Firefox';
-    elseif(strpos($user_agent, 'Chrome') !== FALSE)
-        return 'Google Chrome';
-    elseif(strpos($user_agent, 'Opera Mini') !== FALSE)
-        return "Opera Mini";
-    elseif(strpos($user_agent, 'Opera') !== FALSE)
-        return "Opera";
-    elseif(strpos($user_agent, 'Safari') !== FALSE)
-        return "Safari";
-    else
-        return 'No hemos podido detectar su navegador';
-}
-$navegador = getBrowser($user_agent);
-?>
 <div class="container">
     <div class = "row">
-        @if(isset($preconsulta))
-            <div class = "col-xs-12 col-sm-3">
-                <h3 class = "page-header pull-left">Consulta</h3>
-            </div>
+        <div class = "col-xs-12 col-sm-4">
+            <h3 class = "page-header pull-left">Ficha del Paciente</h3>
+        </div>
 
-            <div class = "col-xs-12 col-sm-6" align="center" style="margin-top: 44px;">
-                <a class="botonRay grupo text-center cursor btn-default removerDec botonPreconsulta" style="margin: 33px 5px 10px;" onclick="mostrarOcultar('preconsulta')"
+        @if(isset($preconsulta))
+            <div class = "col-xs-12 col-sm-4" align="center">
+                <a class="botonRay col-xs-5 col-sm-2 grupo text-center cursor btn-default removerDec botonPreconsulta" style="margin: 33px 5px 10px;" onclick="mostrarOcultar('preconsulta')"
                    title="Mostrar u ocultar los Datos de la pre-consulta"><i class = "fa fa-product-hunt"></i>
                 </a>
                 {{--@if(isset($consulta))--}}
-                    <a class="grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;"
+                    <a class="col-xs-5 col-sm-2 grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;"
                        onclick="archivos(this)" title="Agregar Archivos" id="0" id_cliente="{!! $cliente->id !!}"
                        id_padecimiento="{!! $padecimientoC->id_pade !!}" data-toggle="modal" data-target="#modalArchivos">
                         <i class="fa fa-file-pdf-o"> </i>
                     </a>
                 {{--@endif--}}
-                <a class="grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;" onclick="receta(this)"
+                <a class="col-xs-5 col-sm-2 grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;" onclick="receta(this)"
                    paciente="{!! $cliente->nombre !!} {!! $cliente->apellido !!}" title="Crear Receta" href="#"
                    id_cliente="{!! $cliente->id !!}" data-toggle="modal" data-target="#modalReceta">
                     <i class="fa fa-pencil-square-o"> </i>
                 </a>
-                <a class="grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;"
-                   title="Seguimiento" href="/dr_basico/servicios/{!! $cliente->id_servicio !!}/seguimiento/cita" class="removerDec">
+                <a class="col-xs-5 col-sm-2 grupo text-center cursor btn-default removerDec" style="margin: 33px 5px 10px;"
+                   title="Seguimiento" href="/servicios/{!! $cliente->id_servicio !!}/seguimiento/cita" class="removerDec">
                     <i class="fa fa-share-square-o"> </i>
                 </a>
             </div>
         @else
-            <div class = "col-xs-12 col-sm-3">
-                <h3 class = "page-header pull-left">Historial del Paciente</h3>
-            </div>
-
-            <div class = "col-xs-12 col-sm-6" align="center" style="margin-top: 44px;">
-                <a class="botonRay grupo text-center cursor btn-default botonPersonales" style="margin-top: 33px;" onclick="mostrarOcultar('datos')" title="Mostrar u ocultar los Datos personales"><i class = "fa fa-user"></i><strong></strong></a>
-                <a class="botonRay grupo text-center cursor btn-default botonListas" style="margin: 33px 5px 20px;" onclick="mostrarOcultar('listas')" title="Mostrar u ocultar Lista de correos y contactos"><i class = "fa fa-list"></i><strong></strong></a>
-                <a class="botonRay grupo text-center cursor btn-default botonComentarios" style="margin: 33px 0px 20px;" onclick="mostrarOcultar('comentarios')" title="Mostrar u ocultar Comentarios completos de Ficha Médica"><i class = "fa fa-comment-o"></i><strong></strong></a>
+            <div class = "col-xs-12 col-sm-4" align="center">
+                <a class="botonRay col-sm-offset-2 col-sm-2 grupo text-center cursor btn-default botonPersonales" style="margin-top: 33px;" onclick="mostrarOcultar('datos')" title="Mostrar u ocultar los Datos personales"><i class = "fa fa-user"></i><strong></strong></a>
+                <a class="botonRay col-sm-2 grupo text-center cursor btn-default botonListas" style="margin: 33px 5px 20px;" onclick="mostrarOcultar('listas')" title="Mostrar u ocultar Lista de correos y contactos"><i class = "fa fa-list"></i><strong></strong></a>
+                <a class="botonRay col-sm-2 grupo text-center cursor btn-default botonComentarios" style="margin: 33px 0px 20px;" onclick="mostrarOcultar('comentarios')" title="Mostrar u ocultar Comentarios completos de Ficha Médica"><i class = "fa fa-comment-o"></i><strong></strong></a>
                 @if(!empty($recetas))
-                    <a class="grupo text-center cursor btn-default" style="margin: 33px 5px 20px;" title="Historial Completo de recetas" data-toggle="modal" href="#historialRecetas"><i class="fa fa-list-alt"></i></a>
+                    <a class="col-sm-2 grupo text-center cursor btn-default" style="margin: 33px 5px 20px;" title="Historial Completo de recetas" data-toggle="modal" href="#historialRecetas"><i class="fa fa-list-alt"></i></a>
                 @endif
             </div>
         @endif
 
 
-        <div class = "col-sm-3 hidden-xs">
-            <h3 class = "page-header pull-right text-right">{!! $cliente->nombre !!} {!! $cliente->apellido !!}</h3>
+        <div class = "col-sm-4 hidden-xs">
+            <h3 class = "page-header pull-right">{!! $cliente->nombre !!} {!! $cliente->apellido !!}</h3>
         </div>
 
         <div class = "col-xs-12 visible-xs">
-            <h3 class = "page-header text-right">{!! $cliente->nombre !!} {!! $cliente->apellido !!}</h3>
+            <h3 class = "page-header ">{!! $cliente->nombre !!} {!! $cliente->apellido !!}</h3>
         </div>
     </div>
 
@@ -80,13 +54,13 @@ $navegador = getBrowser($user_agent);
                 <a class="botonRay col-xs-2 grupo text-center cursor btn-default botonPersonales" style="margin-top: 0px;padding: 0px!important;" onclick="mostrarOcultar('datos')" title="Mostrar u ocultar los Datos personales"><i class = "fa fa-user"></i><strong></strong></a>
                 <a class="botonRay col-xs-2 grupo text-center cursor btn-default botonListas" style="margin: 0px 5px 20px;padding: 0px!important;" onclick="mostrarOcultar('listas')" title="Mostrar u ocultar Lista de correos y contactos"><i class = "fa fa-list"></i><strong></strong></a>
                 <a class="botonRay col-xs-2 grupo text-center cursor btn-default botonComentarios" style="margin: 0px 5px 20px;padding: 0px!important;" onclick="mostrarOcultar('comentarios')" title="Mostrar u ocultar Comentarios completos de Ficha Médica"><i class = "fa fa-comment-o"></i><strong></strong></a>
-                <a class="botonRay col-xs-2 grupo text-center cursor btn-default segundoRenglon @if($navegador != 'Mozilla Firefox')posicion2 @else posicion1 @endif" style="margin: 0px -5px 20px;padding: 0px!important;" onclick="reagendarAlerta(this)" para="2" title="Mandar alerta para dar Seguimiento a esta Cita" id_servicio="{!! $cliente->id_servicio !!}"><i class = "fa fa-share-square-o"></i><strong></strong></a>
+                <a class="botonRay col-xs-2 grupo text-center cursor btn-default segundoRenglon posicion1" style="margin: 0px 5px 20px;padding: 0px!important;" onclick="reagendarAlerta(this)" para="2" title="Mandar alerta para dar Seguimiento a esta Cita" id_servicio="{!! $cliente->id_servicio !!}"><i class = "fa fa-share-square-o"></i><strong></strong></a>
 
                 @if(!empty($recetas))
                     <a class="col-xs-2 grupo text-center cursor btn-default" style="margin: 0px 5px 20px;padding: 0px!important;" title="Historial Completo de recetas" data-toggle="modal" href="#historialRecetas"><i class="fa fa-list-alt"></i></a>
-                    <a class="col-xs-2 grupo text-center cursor btn-default segundoRenglon posicion2" style="margin: 0px 5px 20px;padding: 0px!important;" target="_blank" href="/dr_basico/clientes/historial/{!! $cliente->id !!}" title="Historial del Paciente"><i class="glyphicon glyphicon-paste"></i></a>
+                    <a class="col-xs-2 grupo text-center cursor btn-default segundoRenglon posicion2" style="margin: 0px 5px 20px;padding: 0px!important;" target="_blank" href="/clientes/historial/{!! $cliente->id !!}" title="Ficha completa del Paciente"><i class="fa fa-heartbeat"></i></a>
                 @else
-                    <a class="col-xs-2 grupo text-center cursor btn-default" style="margin: 0px 5px 20px;padding: 0px!important;" target="_blank" href="/dr_basico/clientes/historial/{!! $cliente->id !!}" title="Historial del Paciente"><i class="glyphicon glyphicon-paste"></i></a>
+                    <a class="col-xs-2 grupo text-center cursor btn-default" style="margin: 0px 5px 20px;padding: 0px!important;" target="_blank" href="/clientes/historial/{!! $cliente->id !!}" title="Ficha completa del Paciente"><i class="fa fa-heartbeat"></i></a>
                 @endif
             </div>
         </div>
@@ -167,10 +141,16 @@ $navegador = getBrowser($user_agent);
                 <div class="form-group col-sm-3">
                     {!! Form::label('', 'Grupo sanguíneo:') !!}<span> {!!$sangre!!}</span>
                 </div>
+                {{--<div class="form-group col-sm-3">
+                    {!! Form::label('', 'Dirección:') !!}<span>{!!$cliente->calle!!}, {!!$cliente->no_exterior!!}, {!!$cliente->no_interiior!!},
+                        {!! $cliente->colonia !!}, {!!$cliente->ciudad!!}, {!!$cliente->estado!!}, {!!$cliente->pais!!},
+                        {!!$cliente->cp!!}</span>
+                </div>--}}
             </div>
         </div>
         @include('clientes.fichaMin')
         @include('clientes.fichaMax')
+
     </div>
 
     @if(isset($preconsulta))
@@ -185,12 +165,12 @@ $navegador = getBrowser($user_agent);
                     <div class = "table-responsive col-xs-12">
                         <table class="table">
                             <thead>
-                                <th>Padecimiento</th>
-                                <th>Fecha</th>
-                                <th>Tipo</th>
-                                {{--<th>Diagnostico</th>--}}
-                                <th>Observaciones</th>
-                                <th>Recetas</th>
+                            <th>Padecimiento</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Diagnostico</th>
+                            <th>Observaciones</th>
+                            <th>Recetas</th>
                             </thead>
                             <tbody>
                             @for($i = 0; $i < count($padecimientos); ++$i)
@@ -210,17 +190,16 @@ $navegador = getBrowser($user_agent);
                                     </td>
                                     <td>{!! $ultima->fecha !!}</td>
                                     <td>{!! $tipo !!}</td>
-                                    {{--<td>{!! $ultima->diagnostico !!}</td>--}}
+                                    <td>{!! $ultima->diagnostico !!}</td>
                                     <td>{!! $ultima->observaciones !!}</td>
                                     <td>
                                         @if(isset($ultima->recetasEstaFecha))
                                             @foreach($ultima->recetasEstaFecha as $receta)
                                                 <a class="removerDec" href="#" onclick="recetaReimpresion(this)"
-                                                   dato-fecha="{!! $receta->fecha !!}" dato-receta="{!! $receta->receta !!}" dato-nombre="{!! $receta->nombre_receta !!}"
+                                                   dato-fecha="{!! $receta->fecha !!}" dato-receta="{!! $receta->receta !!}"
                                                    paciente="{!! $cliente->nombre !!} {!! $cliente->apellido !!}"
-                                                   tipoReceta="{!! $receta->tipoReceta !!}"
                                                    data-toggle="modal" data-target="#modalReceta" title="{!! $receta->receta !!}" >
-                                                    <i class="fa fa-print"> </i>
+                                                    <i class="fa fa-pencil-square-o"> </i>
                                                 </a>
                                             @endforeach
                                         @endif
@@ -234,18 +213,16 @@ $navegador = getBrowser($user_agent);
                                         <td>{!! $todas[$j]->padecimiento !!}</td>
                                         <td>{!! $todas[$j]->fecha !!}</td>
                                         <td>{!! $tipoCita !!}</td>
-                                        {{--<td>{!! $todas[$j]->diagnostico !!}</td>--}}
+                                        <td>{!! $todas[$j]->diagnostico !!}</td>
                                         <td>{!! $todas[$j]->observaciones !!}</td>
                                         <td>
                                             @if(isset($todas[$j]->recetasEstaFecha))
-
                                                 @foreach($todas[$j]->recetasEstaFecha as $recetaT)
                                                     <a class="removerDec" href="#" onclick="recetaReimpresion(this)"
                                                        dato-fecha="{!! $recetaT->fecha !!}" dato-receta="{!! $recetaT->receta !!}"
                                                        paciente="{!! $cliente->nombre !!} {!! $cliente->apellido !!}"
-                                                       tipoReceta="{!! $recetaT->tipoReceta !!}"
                                                        data-toggle="modal" data-target="#modalReceta" title="{!! $recetaT->receta !!}" >
-                                                        <i class="fa fa-print"> </i>
+                                                        <i class="fa fa-pencil-square-o"> </i>
                                                     </a>
                                                 @endforeach
                                             @endif
@@ -265,6 +242,9 @@ $navegador = getBrowser($user_agent);
         @if ($historial != 'vacio')
             <div class = "col-xs-12 grupo historialCitas">
                 <div class="col-xs-12 page-header-sub"><i class = "fa fa-book"></i><strong> Historial de Padecimientos</strong>
+                    {{--@if(!empty($recetas))
+                        <a class="pull-right" title="Historial de recetas del paciente" data-toggle="modal" href="#historialRecetas"><i class="fa fa-pencil-square-o"></i></a>
+                    @endif--}}
                 </div>
                 <div class="row">
                     <div class = "table-responsive col-xs-12">
@@ -273,7 +253,7 @@ $navegador = getBrowser($user_agent);
                                 <th>Padecimiento</th>
                                 <th>Fecha</th>
                                 <th>Tipo</th>
-                                {{--<th>Diagnostico</th>--}}
+                                <th>Diagnostico</th>
                                 <th>Observaciones</th>
                             </thead>
                             <tbody>
@@ -286,7 +266,7 @@ $navegador = getBrowser($user_agent);
                                         <td>{!! $servicio->padecimiento !!}</td>
                                         <td>{!! $servicio->fecha !!}</td>
                                         <td>{!! $tipo !!}</td>
-                                        {{--<td>{!! $servicio->diagnostico !!}</td>--}}
+                                        <td>{!! $servicio->diagnostico !!}</td>
                                         <td>{!! $servicio->observaciones !!}</td>
                                     </tr>
                                 @endforeach
@@ -314,6 +294,7 @@ $navegador = getBrowser($user_agent);
                                 @foreach($padecimientos as $padecimiento)
                                     <tr class="{!! $padecimiento->id !!}oculto hidden pade">
                                         <td>{!! $padecimiento->padecimiento !!}</td>
+                                        {{--<td><div class="col-sm-1"><a target="_blank" href="/img/uploads/archivos/{!!$archivo->archivo!!}" download="{!!$archivo->archivo!!}" title="{!! $archivo->titulo !!}" class="removerDec"> <i class="fa fa-file-image-o"> </i></a></div></td>--}}
                                         <td align="center">
                                             @if(empty($padecimiento->archivo))
                                                 <div class="text-center">Aun no se agrega.</div>
@@ -356,7 +337,12 @@ $navegador = getBrowser($user_agent);
                                                         </div>
                                                     </div>
                                                 @else
-
+                                                    {{--<div class="col-sm-1">
+                                                        <a target="_blank" href="/img/uploads/archivos/{!!$archivo->archivo!!}"
+                                                           download="{!!$archivo->titulo!!}" title="{!! $archivo->titulo !!}"
+                                                           class="removerDec"> <i class="fa fa-file-image-o"> </i>
+                                                        </a>
+                                                    </div>--}}
                                                 @endif
                                             @endforeach
                                             @endif
@@ -369,10 +355,18 @@ $navegador = getBrowser($user_agent);
                                                 $extension = $extension[1];
                                                 ?>
                                                 @if($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "gif")
-
+                                                    {{--<div class="col-sm-1">
+                                                        <a target="_blank" href="/img/uploads/archivos/{!!$archivo->archivo!!}"
+                                                           download="{!!$archivo->archivo!!}" class="removerDec">
+                                                            <img class="img-responsive" height="auto" width = "150px"
+                                                                 src="{{asset('img/uploads/archivos/'.$archivo->archivo)}}"
+                                                                 title="{!! $archivo->titulo !!}" alt="{!! $archivo->titulo !!}"
+                                                            />
+                                                        </a>
+                                                    </div>--}}
                                                 @else
                                                     <div class="col-sm-1">
-                                                        <a target="_blank" href="/dr_basico/img/uploads/archivos/{!!$archivo->archivo!!}"
+                                                        <a target="_blank" href="/img/uploads/archivos/{!!$archivo->archivo!!}"
                                                            download="{!!$archivo->titulo!!}"
                                                            title="{!! $archivo->titulo !!} {!!$archivo->created_at!!}"
                                                            class="removerDec"> <i class="fa fa-file-image-o"> </i>
@@ -390,81 +384,29 @@ $navegador = getBrowser($user_agent);
             </div>
         @endif
     </div>
-
     <div class="row col-xs-12">
-        @if(isset($padecimientos[0]->estudio))
-            <div class = "col-xs-12 grupo archivos">
-                <div class="col-xs-12 page-header-sub"><i class = "fa fa-stethoscope"></i><strong> Estudios</strong></div>
-                <div class="row">
-                    <div class = "table-responsive col-xs-12">
-                        <table class="table">
-                            <thead>
-                                <th>Padecimiento</th>
-                                <th class="text-center"><div class="col-xs-6">Examen</div> <div class="col-xs-6">Proveedor</div></th>
-                            </thead>
-                            <tbody>
-                                @foreach($padecimientos as $padecimiento)
-                                    <tr class="{!! $padecimiento->id !!}oculto hidden pade">
-                                        <td>{!! $padecimiento->padecimiento !!}</td>
-                                        <td align="center">
-                                            @if(empty($padecimiento->archivo))
-                                                <div class="text-center">Aun no se agrega.</div>
-                                            @else
-                                            @foreach($padecimiento->estudio as $estudio)
-                                                <div class="col-xs-6">
-                                                    {!! $estudio->estudio_nombre !!}
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    {!! $estudio->proveedor_nombre !!}
-                                                </div>
-                                            @endforeach
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    <div class="row col-xs-12">
-        <div class = "col-xs-12 grupo listas datosListasFicha datosListas hidden">
+        <div class = "col-xs-12 grupo margentop20 listas datosListasFicha datosListas hidden">
             <div class="col-xs-12 page-header-sub"><i class = "fa fa-list"></i><strong> Lista de Correos y Contactos</strong></div>
             <div class="row">
                 <div class="col-sm-12">
-                    <strong>Correos: </strong><br>
+                    <strong>Correos: </strong>
                     @foreach($correos as $correo)
-                        <span> {!! $correo->email !!} </span><br>
+                        <span>{!! $correo->email !!}; </span>
                     @endforeach
                 </div>
-                <div class="col-sm-12 @if(!isset($cliente->contactos)) hidden @endif margentop20">
+                <div class="col-sm-12 @if(!isset($cliente->contactos)) hidden @endif ">
                     <strong class="visible-xs">Contactos: </strong>
                     <div class="col-xs-12 hidden-xs" style="font-weight: bold">
-                        <div class="col-sm-2">Contacto</div>
-                        <div class="col-sm-1">Parentesco</div>
-                        <div class="col-sm-1">Calle</div>
-                        <div class="col-sm-1">Núm. Ext.</div>
-                        <div class="col-sm-1">Núm. Int.</div>
-                        <div class="col-sm-1">Colonia</div>
-                        <div class="col-sm-1">Código Postal</div>
-                        <div class="col-sm-1">Teléfono</div>
-                        <div class="col-sm-3">Correo</div>
+                        <div class="col-sm-4">Contacto</div>
+                        <div class="col-sm-4">Teléfono</div>
+                        <div class="col-sm-4">Correo</div>
                     </div>
                     @if(isset($cliente->contactos))
                         @foreach($cliente->contactos as $con)
                             <div class="contacto grupo col-xs-12">
-                                <div class="col-xs-12 col-sm-2 contacto">{!! $con->nombre !!}</div>
-                                <div class="col-xs-12 col-sm-1 parentesco" id="{!! $con->parentesco_id !!}">{!! $con->parentesco !!}</div>
-                                <div class="col-xs-12 col-sm-1 calleE">{!! $con->calleE !!}</div>
-                                <div class="col-xs-12 col-sm-1 no_intE">{!! $con->no_intE !!}</div>
-                                <div class="col-xs-12 col-sm-1 no_extE">{!! $con->no_extE!!}</div>
-                                <div class="col-xs-12 col-sm-1 coloniaE">{!! $con->coloniaE !!}</div>
-                                <div class="col-xs-12 col-sm-1 cpE">{!! $con->cpE !!}</div>
-                                <div class="col-xs-12 col-sm-1 tel_per">{!! $con->telefono_personal !!}</div>
-                                <div class="col-xs-12 col-sm-3 email_per">{!! $con->email_personal !!}</div>
+                                <div class="col-xs-12 col-sm-4 contacto">{!! $con->nombre !!}</div>
+                                <div class="col-xs-12 col-sm-4 tel_per">{!! $con->telefono_personal !!}</div>
+                                <div class="col-xs-12 col-sm-4 email_per">{!! $con->email_personal !!}</div>
                             </div>
                         @endforeach
                     @endif
@@ -475,26 +417,8 @@ $navegador = getBrowser($user_agent);
             <div class="tablaAdmin"></div>
         </div>
     </div>
-    <div class="row col-xs-12">
-        @if(Entrust::can('atender_consulta'))
-            @if(isset($finalizadoDatos))
-                @if($finalizadoDatos->isEmpty())
-                    <a href="#" class="btn btn-warning finalizar pull-right" data-toggle="modal" data-target="#modalFinalizar" title="Finalizar Historial">
-                        Finalizar Historial <i class = "fa fa-fast-forward"></i>
-                    </a>
-                @else
-                    <a href="#" class="btn btn-primary finalizar pull-right" data-toggle="modal" data-target="#modalFinalizar" title="Ver detalles del motivo o causa del finalizado del historial">
-                        Causa <i class = "fa fa-fast-forward"></i>
-                    </a>
-                @endif
-            @endif
-        @endif
-    </div>
 </div>
 @include('modals.receta')
-@if(isset($finalizadoDatos))
-    @include('modals.finalizarHistorial')
-@endif
 <script>
     $(document).ready( function() {
 
@@ -514,11 +438,12 @@ $navegador = getBrowser($user_agent);
         @endif
 
         if (tipoVista == 'ver'){
-            /*mostrarOcultar('datos');*/
+            mostrarOcultar('datos');
         }else{
             @if(isset($padecimientoC))
                 var id_padeConsulta = {!! $padecimientoC->id_pade !!};
                 var nom_pade = '{!! $padecimientoC->padecimiento !!}';
+                /*$('tr.'+id_padeConsulta).addClass('hidden');*/
                 $('tr.todosPade:not(.'+id_padeConsulta+')').addClass('hidden');
                 $('.historial').html(' Historial de '+nom_pade);
             @else
@@ -657,7 +582,7 @@ $navegador = getBrowser($user_agent);
 
     $('.botonRay').on('click', function () {
         checarBotones();
-    });
+    })
 
     function checarBotones(){
 
@@ -684,7 +609,7 @@ $navegador = getBrowser($user_agent);
         var para = $(elemento).attr('para');
         $.ajax({
             type: 'GET',
-            url: '/dr_basico/reagendarAlerta/'+id_servicio+'/'+para,
+            url: '/reagendarAlerta/'+id_servicio+'/'+para,
             success: function(data) {
                 if (para == 1) {
                     swal("Enviada", "Se envió alerta para reagendar esta Cita", "success");

@@ -1,37 +1,30 @@
 <?php
 //-----  Aqui es donde llamamos a las funciones del Repositorio
-$local = 1;
-$perc  = 0;
-$total = 0;
-$diskPerc = 0;
-$diskTotal = 0;
+
 // -- Seccion R A M  ----- //
-if($local==0){
-    $mem = \App\Libraries\Repositories\UsuariosRepository::getRamSpace();
-    $total = $mem['MemTotal']/1000;
-    $libre = ($mem['MemFree']+$mem['Buffers']+$mem['Cached'])/1000;
-    $used = $total - $libre;
-    $perc = round(($used*100)/$total, 2);
+$mem = \App\Libraries\Repositories\UsuariosRepository::getRamSpace();
+$total = $mem['MemTotal']/1000;
+$libre = ($mem['MemFree']+$mem['Buffers']+$mem['Cached'])/1000;
+$used = $total - $libre;
+$perc = round(($used*100)/$total, 2);
+//---- Fin seccion R A M -------//
 
-    //---- Fin seccion R A M -------//
+// -- Seccion D I S C O  ----- //
+//   -  En $diskTotal se obtiene el total del server,
+//   -  si es un server compartido es necesario colocar los GB Asignados del Cpanel
+$diskTotal = \App\Libraries\Repositories\UsuariosRepository::getDiskSpace()/1000000000;
+$diskFree = \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceFree()/1000000000;
 
-    // -- Seccion D I S C O  ----- //
-    //   -  En $diskTotal se obtiene el total del server,
-    //   -  si es un server compartido es necesario colocar los GB Asignados del Cpanel
-    $diskTotal = \App\Libraries\Repositories\UsuariosRepository::getDiskSpace()/1000000000;
-    $diskFree = \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceFree()/1000000000;
+//   -  En $diskUsed es necesario colocar la direccion de la carpeta "LARAVEL"
+//   -  y la de Public tambien.
+$diskUsed = \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceUsed('../../pvproduccion')/1000000000;
+$diskUsed = $diskUsed + \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceUsed('.')/1000000000;
+//dump($diskUsed);
+//---- Fin seccion D I S C O -------//
 
-    //   -  En $diskUsed es necesario colocar la direccion de la carpeta "LARAVEL"
-    //   -  y la de Public tambien.
-    $diskUsed = \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceUsed('../../pvproduccion')/1000000000;
-    $diskUsed = $diskUsed + \App\Libraries\Repositories\UsuariosRepository::getDiskSpaceUsed('.')/1000000000;
-    //dump($diskUsed);
-    //---- Fin seccion D I S C O -------//
-
-    ///$diskUsed = $diskTotal - $diskFree;
-    //dump($diskUsed);
-    $diskPerc = round(($diskUsed*100)/$diskTotal, 2);
-}
+///$diskUsed = $diskTotal - $diskFree;
+//dump($diskUsed);
+$diskPerc = round(($diskUsed*100)/$diskTotal, 2);
 ?>
 
 {{--Inhábiles--}}
@@ -123,26 +116,23 @@ if($local==0){
                 <h4 class="modal-title" id="myModalLabel"><i class="fa fa-bell"></i>&nbsp;Alertas</h4>
             </div>
             <div class="modal-body container-fluid">
-                @if(Entrust::can('ver_servicios'))
-                    <div class="row col-xs-12">
-                        <div class="col-sm-4" align="center">
-                            <a href = "{{ url('/servicios/pendientes/todo') }}" class="btn btn-default boton_pendiente">Pendientes de Pago</a>
-                            {{--<a href = "{{ url('/cuentas_por_cobrar') }}" class="btn btn-default boton_pendiente">Pendientes de Pago</a>--}}
-                        </div>
-                        <div class="col-sm-4" align="center">
-                            <a href = "{{ url('/servicios/inicio/hoy') }}" class="btn btn-default boton_citas">Citas de hoy</a>
-                        </div>
-                        <div class="col-sm-4" align="center">
-                            <a onclick="reagendarLista(this)" class="btn btn-default boton_reagendar">Reagendar y Seguimientos</a>
-                        </div>
+                <div class="row col-xs-12">
+                    <div class="col-sm-4" align="center">
+                        <a href = "{{ url('/servicios/pendientes/todo') }}" class="btn btn-default boton_pendiente">Pendientes de Pago</a>
                     </div>
+                    <div class="col-sm-4" align="center">
+                        <a href = "{{ url('/servicios/inicio/hoy') }}" class="btn btn-default boton_citas">Citas de hoy</a>
+                    </div>
+                    <div class="col-sm-4" align="center">
+                        <a onclick="reagendarLista(this)" class="btn btn-default boton_reagendar">Reagendar y Seguimientos</a>
+                    </div>
+                </div>
 
-                    <fileset>
-                        <div class="table-responsive margentop50">
-                            <div class="tablaContenido"></div>
-                        </div>
-                    </fileset>
-                @endif
+                <fileset>
+                    <div class="table-responsive margentop50">
+                        <div class="tablaContenido"></div>
+                    </div>
+                </fileset>
 
                 <div class="col-xs-12" style="font-weight: bold;"><i class="fa fa-hdd-o"></i> Recursos</div>
                 <div class="col-xs-12 grupo">
@@ -289,18 +279,24 @@ function verFechas() {
 
 function guardarFechas() {
     $('.btn-guardarFechas').addClass('invisible').removeClass('show');
+
     waitingDialog.show('Guardando..', {dialogSize: 'sm', progressType: 'warning'});
+
     var nuevas =  $('#multiFechasT').val();
+
     console.log(nuevas);
-    var fechas = nuevas.split(',');
+
+    fechas = nuevas.split(',');
+
     fechas = $.grep(fechas,function(n){
         return(n);
     });
+
     console.log(fechas);
 
     $.ajax({
         type: 'POST',
-        url: '/dr_basico/guardarFechas',
+        url: '/guardarFechas',
         data:{
             _token: $('meta[name=csrf-token]').attr('content'),
             fechas: fechas,
@@ -309,6 +305,7 @@ function guardarFechas() {
             waitingDialog.hide();
             swal("Guardado","","success");
             window.location.reload(3000);
+
         },error: function (ajaxContext){
             waitingDialog.hide();
             swal("Espere","Algo salio mal, reintente de nuevo","warning");
@@ -344,7 +341,7 @@ function borrarFechas(este) {
     console.log(fecha);
     $.ajax({
         type: 'POST',
-        url: '/dr_basico/borrarFecha/'+fecha,
+        url: '/borrarFecha/'+fecha,
         data:{
             _token: $('meta[name=csrf-token]').attr('content'),
         },
