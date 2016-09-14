@@ -23,7 +23,7 @@ class AdminController extends Controller {
 
 	PUBLIC function MERGEGIT()
 	{
-		RETURN "MALA SALIDA";
+		RETURN "salida regular";
 	}
 	/**
 	 * Show the form for creating a new resource.
